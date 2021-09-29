@@ -35,6 +35,7 @@ namespace shootcraft
       private int screenW = 800, screenH = 450;
       private Player player;
       private Vector2 screenCenter;
+      private float g_force = 100.0f;
 
       private ChunkHandler chunkHandler;
 
@@ -60,6 +61,8 @@ namespace shootcraft
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;
          timer.Start();
+
+         player.UpdatePosition(chunkHandler, 1.0f / fps);
       }
 
       private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -71,10 +74,10 @@ namespace shootcraft
       private void UpdatePhysics()
       { 
          if (!player.IsStanding)
-            player.ApplyForce(new Vector2(0.0f, -40.0f));
+            player.ApplyForce(new Vector2(0.0f, -g_force));
 
-         player.UpdatePosition(chunkHandler, 1.0f / fps);
          ControllPlayer();
+         player.UpdatePosition(chunkHandler, 1.0f / fps);
       }
 
       private void glControl_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
@@ -92,13 +95,13 @@ namespace shootcraft
 
          player.Draw();
 
-         Chunk player_chunk = chunkHandler.GetChunk(player.pos);
-         player_chunk.DrawBorders();
-         Block player_block = player_chunk.GetBlock(player.pos);
-         player_block.DrawBorders();
+         //Chunk player_chunk = chunkHandler.GetChunk(player.pos);
+         //player_chunk.DrawBorders();
+         //Block player_block = player_chunk.GetBlock(player.pos);
+         //player_block.DrawBorders();
 
          Chunk cursor_chunk = chunkHandler.GetChunk(mousePos);
-         cursor_chunk.DrawBorders();
+         //cursor_chunk.DrawBorders();
          Block cursor_block = cursor_chunk.GetBlock(mousePos);
          cursor_block.DrawBorders();
 

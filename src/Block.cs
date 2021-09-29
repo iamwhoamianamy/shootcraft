@@ -16,7 +16,7 @@ namespace shootcraft.src
       public Position pos;
       public Color4 color;
 
-      public static float width = 10.0f;
+      public static float width = 20.0f;
 
       public Block(Position pos, Color4 color)
       {

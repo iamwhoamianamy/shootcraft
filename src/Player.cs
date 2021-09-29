@@ -18,8 +18,11 @@ namespace shootcraft.src
       private Vector2 vel;
       private Vector2 acc;
 
-      public static float height = 20.0f;
-      public static float width = 5.0f;
+      public static float height = 40.0f;
+      public static float width = 10.0f;
+
+      private float speed = 4.0f;
+      private float jumpMomentum = 100.0f;
 
       public bool IsStanding { get; private set; }
 
@@ -32,113 +35,65 @@ namespace shootcraft.src
          IsStanding = false;
       }
 
-      public void UpdatePosition(ChunkHandler ch, float ellapsed)
+      public void UpdatePosition(ChunkHandler chunkHandler, float ellapsed)
       {
-         Chunk current_chunk = ch.GetChunk(pos);
-         Block lower_block = current_chunk.GetBlock(pos, 0, -1);
+         Block center_lower_block = chunkHandler.GetBlock(pos, 0, -1);
+         Block left_lower_block = chunkHandler.GetBlock(pos, -1, -1);
+         Block right_lower_block = chunkHandler.GetBlock(pos, 1, -1);
 
-         if (lower_block.GetType() == typeof(AirBlock))
-            IsStanding = false;
-         else
+         if (center_lower_block.GetType() != typeof(AirBlock) &&
+             pos.Y - height / 4 < center_lower_block.pos.Y + Block.width || false
+             /*left_lower_block.GetType() != typeof(AirBlock) &&
+             pos.X - width / 3 < left_lower_block.pos.X + Block.width*/)
             IsStanding = true;
+         else
+            IsStanding = false;
 
          if (IsStanding)
          {
-            if (pos.Y - height / 4 < lower_block.pos.Y + Block.width)
-            {
-               //if(current_block.GetType() == typeof(AirBlock))
-                  pos.Y = lower_block.pos.Y + Block.width + height / 4;
-
-               if (vel.Y < 0)
-                  vel.Y = 0;
-
-               if (acc.Y < 0)
-                  acc.Y = 0;
-            }
+            pos.Y = center_lower_block.pos.Y + Block.width + height / 4;
+            vel.Y = 0;
+            acc.Y = 0;
          }
+         Block left_upper_block = chunkHandler.GetBlock(pos, -1, 1);
+         Block right_upper_block = chunkHandler.GetBlock(pos, 1, 1);
 
-         Chunk left_chunk, right_chunk;
+         Block left_middle_block = chunkHandler.GetBlock(pos, -1, 0);
+         Block right_middle_block = chunkHandler.GetBlock(pos, 1, 0);
 
-         if (current_chunk.ContainsBlock(pos, -1, 0))
-            left_chunk = current_chunk;
-         else
-            left_chunk = ch.GetChunk(current_chunk.Index - 1);
+         Block upper_block = chunkHandler.GetBlock(pos, 0, 2);
 
-         if (current_chunk.ContainsBlock(pos, 1, 0))
-            right_chunk = current_chunk;
-         else
-            right_chunk = ch.GetChunk(current_chunk.Index + 1);
-
-         Block left_lower_block = left_chunk.GetBlock(pos, -1, 0);
-         Block right_lower_block = right_chunk.GetBlock(pos, 1, 0);
-
-         Block left_upper_block = left_chunk.GetBlock(pos, -1, 1);
-         Block right_upper_block = right_chunk.GetBlock(pos, 1, 1);
-
-         Block upper_block = current_chunk.GetBlock(pos, 0, 2);
-
-         bool is_left_blocked;
-         bool is_right_blocked;
-         bool is_upper_blocked;
-
-         if (left_lower_block.GetType() == typeof(AirBlock) &&
-             left_upper_block.GetType() == typeof(AirBlock))
-            is_left_blocked = false;
-         else
-            is_left_blocked = true;
-
-         if (right_lower_block.GetType() == typeof(AirBlock) &&
-             right_upper_block.GetType() == typeof(AirBlock))
-            is_right_blocked = false;
-         else
-            is_right_blocked = true;
-
-         if (upper_block.GetType() == typeof(AirBlock))
-            is_upper_blocked = false;
-         else
-            is_upper_blocked = true;
-
-         if (is_left_blocked)
+         if (left_middle_block.GetType() != typeof(AirBlock) ||
+             left_upper_block.GetType() != typeof(AirBlock))
          {
-            if (pos.X - width / 2 < left_lower_block.pos.X + Block.width ||
+            if (pos.X - width / 2 < left_middle_block.pos.X + Block.width ||
                 pos.X - width / 2 < left_upper_block.pos.X + Block.width)
             {
-               pos.X = left_lower_block.pos.X + Block.width + width / 2;
-
-               if (vel.X < 0)
-                  vel.X = 0;
-
-               if (acc.X < 0)
-                  acc.X = 0;
+               pos.X = left_middle_block.pos.X + Block.width + width / 2;
+               vel.X = 0;
+               acc.X = 0;
             }
          }
 
-         if (is_right_blocked)
+         if (right_middle_block.GetType() != typeof(AirBlock) ||
+             right_upper_block.GetType() != typeof(AirBlock))
          {
-            if (pos.X + width / 2 > right_lower_block.pos.X ||
+            if (pos.X + width / 2 > right_middle_block.pos.X ||
                 pos.X + width / 2 > right_upper_block.pos.X)
             {
-               pos.X = right_lower_block.pos.X - width / 2;
-
-               if (vel.X > 0)
-                  vel.X = 0;
-
-               if (acc.X > 0)
-                  acc.X = 0;
+               pos.X = right_middle_block.pos.X - width / 2;
+               vel.X = 0;
+               acc.X = 0;
             }
          }
 
-         if (is_upper_blocked)
+         if (upper_block.GetType() != typeof(AirBlock))
          {
             if (pos.Y + height / 4 * 3 > upper_block.pos.Y)
             {
                pos.Y = upper_block.pos.Y - height / 4 * 3;
-
-               if (vel.Y > 0)
-                  vel.Y = 0;
-
-               if (acc.Y > 0)
-                  acc.Y = 0;
+               vel.Y = 0;
+               acc.Y = 0;
             }
          }
 
@@ -156,6 +111,7 @@ namespace shootcraft.src
       {
          vel += force;
       }
+
       public void Draw()
       {
          GL.Color4(Color4.Red);
@@ -168,6 +124,22 @@ namespace shootcraft.src
          GL.Vertex2(pos.X - width / 2, pos.Y + height / 4 * 3);
 
          GL.End();
+      }
+
+      public void GoLeft()
+      {
+         pos += new Vector2(-speed, 0.0f);
+      }
+
+      public void GoRight()
+      {
+         pos += new Vector2(speed, 0.0f);
+      }
+
+      public void Jump()
+      {
+         if (IsStanding)
+            ApplyMomentum(new Vector2(0.0f, jumpMomentum));
       }
    }
 }

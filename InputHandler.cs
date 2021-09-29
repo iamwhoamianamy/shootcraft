@@ -53,30 +53,18 @@ namespace shootcraft
       {
          if (Keyboard.GetState().IsKeyDown(Key.Space))
          {
-            if (player.IsStanding)
-               player.ApplyMomentum(new Vector2(0.0f, 5.0f));
+            player.Jump();
          }
 
          if (Keyboard.GetState().IsKeyDown(Key.A))
          {
-            player.pos += new Vector2(-1.0f, 0.0f);
+            player.GoLeft();
          }
          else
             if (Keyboard.GetState().IsKeyDown(Key.D))
          {
-            player.pos += new Vector2(1.0f, 0.0f);
+            player.GoRight();
          }
-         else
-            if (Keyboard.GetState().IsKeyDown(Key.W))
-         {
-            player.pos += new Vector2(0.0f, 1.0f);
-         }
-         else
-            if (Keyboard.GetState().IsKeyDown(Key.S))
-         {
-            player.pos += new Vector2(0.0f, -1.0f);
-         }
-
       }
 
       private void glControl_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)

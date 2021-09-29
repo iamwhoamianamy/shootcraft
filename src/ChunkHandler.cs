@@ -28,9 +28,9 @@ namespace shootcraft.src
          return (int)(pos.X / (Chunk.blockCountX * Block.width));
       }
 
-      public Chunk GetChunk(Vector2 pos)
+      public Chunk GetChunk(Vector2 pos, int blockOffsetX = 0)
       {
-         return GetChunk(PosToChunkId(pos));
+         return GetChunk(PosToChunkId(pos + new Vector2(Block.width * blockOffsetX, 0)));
       }
 
       public Chunk GetChunk(int chunkId)
@@ -46,6 +46,11 @@ namespace shootcraft.src
          }
          else
             return chunks[chunkId];
+      }
+
+      public Block GetBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
+      {
+         return GetChunk(pos, offsetX).GetBlock(pos, offsetX, offsetY);
       }
 
       public void DrawVisibleChunks(Vector2 pos, int fow)

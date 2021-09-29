@@ -72,6 +72,7 @@
     <Compile Include="src\ChunkHandler.cs" />
     <Compile Include="src\GameHelper.cs" />
     <Compile Include="src\Logger.cs" />
+    <Compile Include="src\NoiseGenerator.cs" />
     <Compile Include="src\Player.cs" />
     <Compile Include="src\Position.cs" />
     <Page Include="MainWindow.xaml">
