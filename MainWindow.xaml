@@ -1,0 +1,22 @@
+﻿<Window x:Class="shootcraft.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:opentk="clr-namespace:OpenTK;assembly=OpenTK.GLControl"
+        xmlns:local="clr-namespace:shootcraft"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Closed="Window_Closed">
+    <Grid>
+        <WindowsFormsHost Initialized="WindowsFormsHost_Initialized">
+            <opentk:GLControl x:Name="glControl"
+                              Load="glControl_Load"
+                              Paint="glControl_Paint"
+                              Resize="glControl_Resize"
+                              MouseMove="glControl_MouseMove"
+                              MouseClick="glControl_MouseClick"
+                              KeyDown="glControl_KeyDown"/>
+        </WindowsFormsHost>
+    </Grid>
+</Window>
