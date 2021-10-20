@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OpenTK;
+
 namespace shootcraft.src.blocks
 {
    public class AirBlock : Block
    {
-      public AirBlock(Position pos) : base(pos, OpenTK.Graphics.Color4.AliceBlue) { }
+      public AirBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.AliceBlue) { }
    }
 }

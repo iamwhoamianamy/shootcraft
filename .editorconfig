@@ -1,0 +1,4 @@
+﻿[*.{cs,vb}]
+
+# IDE0048: Добавить круглые скобки для ясности
+dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary

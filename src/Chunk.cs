@@ -37,8 +37,7 @@ namespace shootcraft.src
          {
             for (int j = 0; j < blockCountX; j++)
             {
-               Position block_pos = new Position((int)(StartX + j * Block.width),
-                                                 (int)(i * Block.width));
+               Vector2 block_pos = new Vector2(StartX + j * Block.width + Block.width / 2, i * Block.width + Block.width / 2);
 
                if(block_pos.Y < 150)
                   _blocks[i][j] = new DirtBlock(block_pos);

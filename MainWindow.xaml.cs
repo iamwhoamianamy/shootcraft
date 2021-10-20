@@ -30,17 +30,19 @@ namespace shootcraft
    {
       private Timer timer;
       private float t = 0.0f;
-      private const int fps = 30;
+      private const int fps = 60;
+      private const float ellapsed = 1.0f / fps;
       private Logger logger;
       private int screenW = 800, screenH = 450;
       private Player player;
       private Vector2 screenCenter;
-      private float g_force = 100.0f;
+      private float GForce = 3500.0f;
 
       private ChunkHandler chunkHandler;
 
       public MainWindow()
       {
+
          InitializeComponent();
       }
       private void WindowsFormsHost_Initialized(object sender, EventArgs e)
@@ -50,6 +52,8 @@ namespace shootcraft
 
       private void glControl_Load(object sender, EventArgs e)
       {
+         //glControl.Cursor = System.Windows.Forms.Cursors.No;
+
          logger = Logger.Get();
 
          screenCenter.X = screenW / 2;
@@ -60,24 +64,32 @@ namespace shootcraft
 
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;
+         timer.AutoReset = false;
          timer.Start();
 
-         player.UpdatePosition(chunkHandler, 1.0f / fps);
+         player.ResolveCollisionPrediction(chunkHandler, ellapsed);
+         //player.ResolveCollisionDiagonal(chunkHandler, 1.0f / fps);
       }
 
       private void Timer_Elapsed(object sender, ElapsedEventArgs e)
       {
          UpdatePhysics();
          glControl.Invalidate();
+
+         timer.Start();
       }
 
       private void UpdatePhysics()
-      { 
+      {
          if (!player.IsStanding)
-            player.ApplyForce(new Vector2(0.0f, -g_force));
+            player.ApplyForce(new Vector2(0.0f, -GForce));
+
+         //player.UpdateLocation(ellapsed);
+         //player.ResolveCollisionEfremov(chunkHandler, ellapsed);
+         player.ResolveCollisionPrediction(chunkHandler, ellapsed);
+         player.CheckForStanding(chunkHandler);
 
          ControllPlayer();
-         player.UpdatePosition(chunkHandler, 1.0f / fps);
       }
 
       private void glControl_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
@@ -86,13 +98,11 @@ namespace shootcraft
          GL.Clear(ClearBufferMask.ColorBufferBit);
 
          // Draw objects here
-
          GL.ClearColor(1.0f, 1.0f, 1.0f, 1f);
 
          Vector2 drawing_center = player.pos;
 
          chunkHandler.DrawVisibleChunks(drawing_center, 2);
-
          player.Draw();
 
          //Chunk player_chunk = chunkHandler.GetChunk(player.pos);
@@ -100,12 +110,16 @@ namespace shootcraft
          //Block player_block = player_chunk.GetBlock(player.pos);
          //player_block.DrawBorders();
 
-         Chunk cursor_chunk = chunkHandler.GetChunk(mousePos);
+         Chunk cursor_chunk = chunkHandler.GetChunk(player.cursor.pos);
          //cursor_chunk.DrawBorders();
-         Block cursor_block = cursor_chunk.GetBlock(mousePos);
+         Block cursor_block = cursor_chunk.GetBlock(player.cursor.pos);
          cursor_block.DrawBorders();
 
+         player.cursor.Draw();
+
          glControl.SwapBuffers();
+
+         Title = $"{player.cursor.pos}";
       }
 
       private void glControl_Resize(object sender, EventArgs e)

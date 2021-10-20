@@ -28,25 +28,33 @@ namespace shootcraft
    public partial class MainWindow : Window
    {
 
-      private Vector2 mousePos;
       private bool isMouseOver = false;
       private bool isMouseDown = false;
 
       private void glControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         mousePos.X = e.X;
-         mousePos.Y = glControl.Height - e.Y;
-
-         Title = e.X.ToString() + " " + e.Y.ToString();
+         player.cursor.pos.X = e.X;
+         player.cursor.pos.Y = glControl.Height - e.Y;
 
       }
 
       private void glControl_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         Chunk cursor_chunk = chunkHandler.GetChunk(mousePos);
-         cursor_chunk.DrawBorders();
-         Block cursor_block = cursor_chunk.GetBlock(mousePos);
-         cursor_chunk.SetBlock(mousePos, new AirBlock(cursor_block.pos));
+         Vector2 block_pos = player.cursor.pos;
+
+         if (e.Button == System.Windows.Forms.MouseButtons.Left)
+         {
+            Block cursor_block = chunkHandler.GetBlock(block_pos);
+            chunkHandler.SetBlock(block_pos, new AirBlock(cursor_block.pos));
+         }
+         else
+         {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+               Block cursor_block = chunkHandler.GetBlock(block_pos);
+               chunkHandler.SetBlock(block_pos, new DirtBlock(cursor_block.pos));
+            }
+         }
       }
 
       private void ControllPlayer()
@@ -58,18 +66,61 @@ namespace shootcraft
 
          if (Keyboard.GetState().IsKeyDown(Key.A))
          {
-            player.GoLeft();
+            player.GoLeft(chunkHandler);
+            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
          }
          else
             if (Keyboard.GetState().IsKeyDown(Key.D))
          {
-            player.GoRight();
+            player.GoRight(chunkHandler);
+            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+         }
+
+         if (Keyboard.GetState().IsKeyDown(Key.S))
+         {
+            player.GoDown(chunkHandler);
+            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+         }
+         else
+            if (Keyboard.GetState().IsKeyDown(Key.W))
+         {
+            player.GoUp(chunkHandler);
+            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
          }
       }
 
       private void glControl_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
       {
 
+         //switch(e.KeyCode)
+         //{
+         //   case System.Windows.Forms.Keys.W:
+         //   {
+         //      player.GoUp();
+         //      break;
+         //   }
+         //   case System.Windows.Forms.Keys.A:
+         //   {
+         //      player.GoLeft();
+         //      break;
+         //   }
+         //   case System.Windows.Forms.Keys.S:
+         //   {
+         //      player.GoDown();
+         //      break;
+         //   }
+         //   case System.Windows.Forms.Keys.D:
+         //   {
+         //      player.GoRight();
+         //      break;
+         //   }
+         //}
       }
+
+      private void glControl_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+      {
+
+      }
+
    }
 }

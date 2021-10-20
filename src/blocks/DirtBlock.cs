@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OpenTK;
+
 namespace shootcraft.src.blocks
 {
    public class DirtBlock : Block
    {
-      public DirtBlock(Position pos) : base(pos, OpenTK.Graphics.Color4.Pink) { }
+      public DirtBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.Pink) { }
    }
 }

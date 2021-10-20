@@ -70,11 +70,13 @@
     <Compile Include="src\blocks\DirtBlock.cs" />
     <Compile Include="src\Chunk.cs" />
     <Compile Include="src\ChunkHandler.cs" />
+    <Compile Include="src\Cursor.cs" />
     <Compile Include="src\GameHelper.cs" />
     <Compile Include="src\Logger.cs" />
     <Compile Include="src\NoiseGenerator.cs" />
     <Compile Include="src\Player.cs" />
     <Compile Include="src\Position.cs" />
+    <Compile Include="src\Rectangle.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -106,6 +108,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include=".editorconfig" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -16,7 +16,8 @@
                               Resize="glControl_Resize"
                               MouseMove="glControl_MouseMove"
                               MouseClick="glControl_MouseClick"
-                              KeyDown="glControl_KeyDown"/>
+                              KeyDown="glControl_KeyDown"
+                              KeyPress="glControl_KeyPress"/>
         </WindowsFormsHost>
     </Grid>
 </Window>

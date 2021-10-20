@@ -53,6 +53,11 @@ namespace shootcraft.src
          return GetChunk(pos, offsetX).GetBlock(pos, offsetX, offsetY);
       }
 
+      public void SetBlock(Vector2 pos, Block block, int offsetX = 0, int offsetY = 0)
+      {
+         GetChunk(pos, offsetX).SetBlock(pos, block, offsetX, offsetY);
+      }
+
       public void DrawVisibleChunks(Vector2 pos, int fow)
       {
          int center_chunk_id = PosToChunkId(pos);
