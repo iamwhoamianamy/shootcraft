@@ -95,11 +95,15 @@ namespace shootcraft.src
 
       public void DrawAllBlocks()
       {
+         GL.Color4(Color4.White);
+
          for (int i = 0; i < blockCountY; i++)
          {
             for (int j = 0; j < blockCountX; j++)
             {
-               _blocks[i][j].Draw();
+               //_blocks[i][j].DrawColor();
+               _blocks[i][j].DrawTexture();
+
             }
          }
       }

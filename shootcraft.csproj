@@ -66,6 +66,9 @@
     </ApplicationDefinition>
     <Compile Include="InputHandler.cs" />
     <Compile Include="src\Block.cs" />
+    <Compile Include="src\ClassesHandler.cs" />
+    <Compile Include="src\IBlockRegisterable.cs" />
+    <Compile Include="src\TexturesHandler.cs" />
     <Compile Include="src\blocks\AirBlock.cs" />
     <Compile Include="src\blocks\DirtBlock.cs" />
     <Compile Include="src\Chunk.cs" />

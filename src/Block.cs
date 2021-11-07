@@ -11,17 +11,18 @@ using OpenTK;
 
 namespace shootcraft.src
 {
-   public abstract class Block
+   public class Block : IBlockRegisterable
    {
       public Vector2 pos;
       public Color4 color;
 
       public static float width = 20.0f;
 
-      //public Block(Block block)
-      //{
-      //   pos = block.pos;
-      //}
+      public Block()
+      {
+         pos = Vector2.Zero;
+         color = Color4.Black;
+      }
 
       public Block(Vector2 pos, Color4 color)
       {
@@ -44,7 +45,7 @@ namespace shootcraft.src
          GL.End();
       }
 
-      public void Draw()
+      public void DrawColor()
       {
          Rectangle rect = GetRectangle();
 
@@ -57,6 +58,38 @@ namespace shootcraft.src
          }
 
          GL.End();
+      }
+
+      public void DrawTexture()
+      {
+         Rectangle rect = GetRectangle();
+
+         GL.BindTexture(TextureTarget.Texture2D,
+            TexturesHandler.blockTextures[this.GetType()]);
+
+         GL.Enable(EnableCap.Texture2D);
+         GL.Begin(BeginMode.Triangles);
+
+         GL.TexCoord2(new Vector2(0, 0));
+         GL.Vertex2(rect.leftBot.X, rect.leftBot.Y);
+
+         GL.TexCoord2(new Vector2(0, 1));
+         GL.Vertex2(rect.leftTop.X, rect.leftTop.Y);
+
+         GL.TexCoord2(new Vector2(1, 0));
+         GL.Vertex2(rect.rightBot.X, rect.rightBot.Y);
+
+         GL.TexCoord2(new Vector2(1, 0));
+         GL.Vertex2(rect.rightBot.X, rect.rightBot.Y);
+
+         GL.TexCoord2(new Vector2(0, 1));
+         GL.Vertex2(rect.leftTop.X, rect.leftTop.Y);
+
+         GL.TexCoord2(new Vector2(1, 1));
+         GL.Vertex2(rect.rightTop.X, rect.rightTop.Y);
+
+         GL.End();
+         GL.Disable(EnableCap.Texture2D);
       }
 
       public Rectangle GetRectangle()

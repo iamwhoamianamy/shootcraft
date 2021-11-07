@@ -42,7 +42,6 @@ namespace shootcraft
 
       public MainWindow()
       {
-
          InitializeComponent();
       }
       private void WindowsFormsHost_Initialized(object sender, EventArgs e)
@@ -53,8 +52,12 @@ namespace shootcraft
       private void glControl_Load(object sender, EventArgs e)
       {
          //glControl.Cursor = System.Windows.Forms.Cursors.No;
+         GL.ClearColor(0.1f, 0.2f, 0.5f, 0.0f);
+         GL.Enable(EnableCap.DepthTest);
 
+         ClassesHandler.Init();
          logger = Logger.Get();
+         TexturesHandler.Init();
 
          screenCenter.X = screenW / 2;
          screenCenter.Y = screenH / 2;
@@ -68,7 +71,7 @@ namespace shootcraft
          timer.Start();
 
          player.ResolveCollisionPrediction(chunkHandler, ellapsed);
-         //player.ResolveCollisionDiagonal(chunkHandler, 1.0f / fps);
+
       }
 
       private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -94,15 +97,15 @@ namespace shootcraft
 
       private void glControl_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
       {
-         GL.Viewport(0, 0, glControl.Width, glControl.Height);
-         GL.Clear(ClearBufferMask.ColorBufferBit);
+         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
          // Draw objects here
-         GL.ClearColor(1.0f, 1.0f, 1.0f, 1f);
+         GL.ClearColor(0.1f, 0.2f, 0.5f, 0.0f);
 
          Vector2 drawing_center = player.pos;
 
          chunkHandler.DrawVisibleChunks(drawing_center, 2);
+
          player.Draw();
 
          //Chunk player_chunk = chunkHandler.GetChunk(player.pos);
