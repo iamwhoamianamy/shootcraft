@@ -66,7 +66,7 @@ namespace shootcraft
          screenCenter.Y = screenH / 2;
 
          chunkHandler = new ChunkHandler();
-         player = new Player(screenCenter);
+         player = new Player(new Vector2(screenCenter.X, 600));
 
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;
@@ -112,7 +112,7 @@ namespace shootcraft
 
          Vector2 drawing_center = player.pos;
 
-         chunkHandler.DrawVisibleChunks(drawing_center, 2);
+         chunkHandler.DrawVisibleChunks(drawing_center, 11);
 
          player.Draw();
 
