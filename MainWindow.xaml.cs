@@ -37,6 +37,9 @@ namespace shootcraft
       private Player player;
       private Vector2 screenCenter;
       private float GForce = 3500.0f;
+      private Vector2 translation;
+      private int currentChunk = 0;
+      private int currentBlock = 0;
 
       private ChunkHandler chunkHandler;
 
@@ -102,6 +105,11 @@ namespace shootcraft
          // Draw objects here
          GL.ClearColor(0.1f, 0.2f, 0.5f, 0.0f);
 
+         translation = new Vector2((float)Width / 2 - player.pos.X,
+            (float)Height / 2 - player.pos.Y);
+
+         GL.Translate(translation.X, translation.Y, 0);
+
          Vector2 drawing_center = player.pos;
 
          chunkHandler.DrawVisibleChunks(drawing_center, 2);
@@ -114,15 +122,18 @@ namespace shootcraft
          //player_block.DrawBorders();
 
          Chunk cursor_chunk = chunkHandler.GetChunk(player.cursor.pos);
+         currentChunk = cursor_chunk.Index;
          //cursor_chunk.DrawBorders();
          Block cursor_block = cursor_chunk.GetBlock(player.cursor.pos);
          cursor_block.DrawBorders();
 
          player.cursor.Draw();
 
+         GL.Translate(-translation.X, -translation.Y, 0);
+
          glControl.SwapBuffers();
 
-         Title = $"{player.cursor.pos}";
+         Title = $"{player.cursor.pos} {currentChunk}";
       }
 
       private void glControl_Resize(object sender, EventArgs e)

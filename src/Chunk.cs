@@ -75,8 +75,8 @@ namespace shootcraft.src
 
       public void SetBlock(Vector2 pos, Block block, int offsetX = 0, int offsetY = 0)
       {
-         int block_x_id = (int)(pos.X / Block.width) - Index * blockCountX + offsetX;
-         int block_y_id = (int)Math.Min(blockCountY - 1, Math.Max(pos.Y / Block.width, 0)) + offsetY;
+         int block_x_id = (int)Math.Floor(pos.X / Block.width) - Index * blockCountX + offsetX;
+         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y / Block.width, 0))) + offsetY;
 
          if (block_x_id > 0 || block_y_id > 0)
          _blocks[block_y_id][block_x_id] = block;
@@ -84,13 +84,21 @@ namespace shootcraft.src
 
       public Block GetBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
       {
-         int block_x_id = (int)(pos.X / Block.width) - Index * blockCountX + offsetX;
-         int block_y_id = (int)Math.Min(blockCountY - 1, Math.Max(pos.Y / Block.width, 0)) + offsetY;
-         
-         if(block_x_id < 0 || block_y_id < 0)
-            return _blocks[0][0];
-         else
-            return _blocks[block_y_id][block_x_id];
+         int block_x_id = (int)Math.Floor(pos.X / Block.width) - Index * blockCountX + offsetX;
+         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y / Block.width, 0))) + offsetY;
+
+         if (block_x_id < 0 || block_y_id < 0)
+         {
+            block_x_id = 0;
+            block_y_id = 0;
+         }
+
+         return _blocks[block_y_id][block_x_id];
+
+         //if(block_x_id < 0 || block_y_id < 0)
+         //   return _blocks[0][0];
+         //else
+         //   return _blocks[block_y_id][block_x_id];
       }
 
       public void DrawAllBlocks()

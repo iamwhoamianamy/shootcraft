@@ -33,8 +33,8 @@ namespace shootcraft
 
       private void glControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         player.cursor.pos.X = e.X;
-         player.cursor.pos.Y = glControl.Height - e.Y;
+         player.cursor.pos.X = e.X - translation.X;
+         player.cursor.pos.Y = glControl.Height - e.Y - translation.Y;
 
       }
 
@@ -115,6 +115,11 @@ namespace shootcraft
          //      break;
          //   }
          //}
+      }
+
+      public Vector2 ScreenToWorld(Vector2 coords)
+      {
+         return coords - translation;
       }
 
       private void glControl_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
