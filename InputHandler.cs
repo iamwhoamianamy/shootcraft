@@ -44,15 +44,15 @@ namespace shootcraft
 
          if (e.Button == System.Windows.Forms.MouseButtons.Left)
          {
-            Block cursor_block = chunkHandler.GetBlock(block_pos);
-            chunkHandler.SetBlock(block_pos, new AirBlock(cursor_block.pos));
+            Block cursor_block = World.GetBlock(block_pos);
+            World.SetBlock(block_pos, new AirBlock(cursor_block.pos));
          }
          else
          {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-               Block cursor_block = chunkHandler.GetBlock(block_pos);
-               chunkHandler.SetBlock(block_pos, new DirtBlock(cursor_block.pos));
+               Block cursor_block = World.GetBlock(block_pos);
+               World.SetBlock(block_pos, new DirtBlock(cursor_block.pos));
             }
          }
       }
@@ -66,26 +66,26 @@ namespace shootcraft
 
          if (Keyboard.GetState().IsKeyDown(Key.A))
          {
-            player.GoLeft(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoLeft();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
          else
             if (Keyboard.GetState().IsKeyDown(Key.D))
          {
-            player.GoRight(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoRight();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
 
          if (Keyboard.GetState().IsKeyDown(Key.S))
          {
-            player.GoDown(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoDown();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
          else
             if (Keyboard.GetState().IsKeyDown(Key.W))
          {
-            player.GoUp(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoUp();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
       }
 

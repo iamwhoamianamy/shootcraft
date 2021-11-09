@@ -41,8 +41,6 @@ namespace shootcraft
       private int currentChunk = 0;
       private int currentBlock = 0;
 
-      private ChunkHandler chunkHandler;
-
       public MainWindow()
       {
          InitializeComponent();
@@ -65,7 +63,7 @@ namespace shootcraft
          screenCenter.X = screenW / 2;
          screenCenter.Y = screenH / 2;
 
-         chunkHandler = new ChunkHandler();
+         World.Init();
          player = new Player(new Vector2(screenCenter.X, 600));
 
          timer = new Timer(1.0 / fps * 1000);
@@ -73,8 +71,7 @@ namespace shootcraft
          timer.AutoReset = false;
          timer.Start();
 
-         player.ResolveCollisionPrediction(chunkHandler, ellapsed);
-
+         player.ResolveCollisionPrediction(ellapsed);
       }
 
       private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -92,8 +89,9 @@ namespace shootcraft
 
          //player.UpdateLocation(ellapsed);
          //player.ResolveCollisionEfremov(chunkHandler, ellapsed);
-         player.ResolveCollisionPrediction(chunkHandler, ellapsed);
-         player.CheckForStanding(chunkHandler);
+         player.ResolveCollisionPrediction(ellapsed);
+         player.CheckForStanding();
+         player.CheckForWater();
 
          ControllPlayer();
       }
@@ -112,7 +110,7 @@ namespace shootcraft
 
          Vector2 drawing_center = player.pos;
 
-         chunkHandler.DrawVisibleChunks(drawing_center, 11);
+         World.DrawVisibleChunks(drawing_center, 11);
 
          player.Draw();
 
@@ -121,7 +119,7 @@ namespace shootcraft
          //Block player_block = player_chunk.GetBlock(player.pos);
          //player_block.DrawBorders();
 
-         Chunk cursor_chunk = chunkHandler.GetChunk(player.cursor.pos);
+         Chunk cursor_chunk = World.GetChunk(player.cursor.pos);
          currentChunk = cursor_chunk.Index;
          //cursor_chunk.DrawBorders();
          Block cursor_block = cursor_chunk.GetBlock(player.cursor.pos);

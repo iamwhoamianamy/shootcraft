@@ -21,7 +21,7 @@ namespace shootcraft.src
       public static int blockCountX = 4;
       public static int blockCountY = 60;
 
-      public Chunk(int index, List<int> fPerlinNoise1D)
+      public Chunk(int index, NoiseGenerator perlinNoise)
       {
          Index = index;
          StartX = index * Chunk.blockCountX * Block.width;
@@ -38,7 +38,7 @@ namespace shootcraft.src
             {
                Vector2 block_pos = new Vector2(StartX + j * Block.width + Block.width / 2, i * Block.width + Block.width / 2);
 
-               if ((int)(block_pos.Y / Block.width) < fPerlinNoise1D[5000 + (int)Math.Floor(block_pos.X / Block.width)] + 10)
+               if ((int)(block_pos.Y / Block.width) < perlinNoise.perlinNoise[perlinNoise.length / 2 + (int)Math.Floor(block_pos.X / Block.width)] + 10)
                   _blocks[i][j] = new DirtBlock(block_pos);
                else if ((int)(block_pos.Y / Block.width) < 16)
                   _blocks[i][j] = new WaterBlock(block_pos);
@@ -110,8 +110,8 @@ namespace shootcraft.src
          {
             for (int j = 0; j < blockCountX; j++)
             {
-               _blocks[i][j].DrawColor();
-               //_blocks[i][j].DrawTexture();
+               //_blocks[i][j].DrawColor();
+               _blocks[i][j].DrawTexture();
 
             }
          }

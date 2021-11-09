@@ -69,6 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="InputHandler.cs" />
     <Compile Include="src\Block.cs" />
+    <Compile Include="src\blocks\SandBlock.cs" />
     <Compile Include="src\blocks\WaterBlock.cs" />
     <Compile Include="src\ClassesHandler.cs" />
     <Compile Include="src\IBlockRegisterable.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="src\blocks\AirBlock.cs" />
     <Compile Include="src\blocks\DirtBlock.cs" />
     <Compile Include="src\Chunk.cs" />
-    <Compile Include="src\ChunkHandler.cs" />
+    <Compile Include="src\World.cs" />
     <Compile Include="src\Cursor.cs" />
     <Compile Include="src\GameHelper.cs" />
     <Compile Include="src\Logger.cs" />
@@ -126,6 +127,13 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="resources\altitudes.txt" />
+    <Resource Include="resources\textures\AirBlock.png" />
+    <Resource Include="resources\textures\Default.png" />
+    <Resource Include="resources\textures\DirtBlock.png" />
+    <Resource Include="resources\textures\SandBlock.png" />
+    <Resource Include="resources\textures\WaterBlock.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
