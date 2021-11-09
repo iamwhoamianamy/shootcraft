@@ -12,6 +12,7 @@ namespace shootcraft.src.blocks
    {
 
       public DirtBlock() : base() { }
-      public DirtBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.Pink) { }
+      public DirtBlock(string type) : base("dirt") { }
+      public DirtBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.Pink, "dirt") { }
    }
 }

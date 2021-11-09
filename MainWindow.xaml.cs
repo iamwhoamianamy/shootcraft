@@ -65,7 +65,8 @@ namespace shootcraft
          screenCenter.X = screenW / 2;
          screenCenter.Y = screenH / 2;
 
-         chunkHandler = new ChunkHandler();
+         chunkHandler = SavesHandler.RestoreFromJson("world1");
+         //chunkHandler = new ChunkHandler();
          player = new Player(screenCenter);
 
          timer = new Timer(1.0 / fps * 1000);
@@ -156,6 +157,7 @@ namespace shootcraft
       private void Window_Closed(object sender, EventArgs e)
       {
          Logger.Close();
+         SavesHandler.SaveToJson(chunkHandler, "world1");
       }
    }
 }

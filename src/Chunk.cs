@@ -9,13 +9,18 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
+using Newtonsoft.Json;
+
 namespace shootcraft.src
 {
+   [JsonObject(MemberSerialization.OptIn)]
    public class Chunk
    {
+      [JsonProperty]
       private Block[][] _blocks;
-
+      [JsonProperty]
       public int Index { get; private set; }
+      [JsonProperty]
       public float StartX { get; private set; }
 
       public static int blockCountX = 4;
@@ -43,6 +48,34 @@ namespace shootcraft.src
                   _blocks[i][j] = new DirtBlock(block_pos);
                else
                   _blocks[i][j] = new AirBlock(block_pos);
+            }
+         }
+      }
+
+      public void RestoreBlocks(int index)
+      {
+         Index = index;
+         StartX = index * Chunk.blockCountX * Block.width;
+
+         for (int i = 0; i < blockCountY; i++)
+         {
+            for (int j = 0; j < blockCountX; j++)
+            {
+               Vector2 block_pos = new Vector2(StartX + j * Block.width + Block.width / 2, i * Block.width + Block.width / 2);
+
+
+               switch(_blocks[i][j].type)
+               {
+                  case "dirt":
+                     _blocks[i][j] = new DirtBlock(block_pos);
+                     break;
+                  case "air":
+                     _blocks[i][j] = new AirBlock(block_pos);
+                     break;
+                  default:
+                     _blocks[i][j] = new Block();
+                     break;
+               }  
             }
          }
       }

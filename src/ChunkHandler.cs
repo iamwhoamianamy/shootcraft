@@ -6,15 +6,26 @@ using System.Threading.Tasks;
 
 using OpenTK;
 
+using Newtonsoft.Json;
+
 namespace shootcraft.src
 {
    public class ChunkHandler
    {
+      [JsonProperty]
       private Dictionary<int, Chunk> chunks;
 
       public ChunkHandler()
       {
          chunks = new Dictionary<int, Chunk>();
+      }
+
+      public void RestoreChunks()
+      {
+         foreach(KeyValuePair<int, Chunk> kvp in chunks)
+         {
+            kvp.Value.RestoreBlocks(kvp.Key);
+         }
       }
 
       //public void AddChunk(Chunk chunk)

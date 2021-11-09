@@ -9,12 +9,17 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
+using Newtonsoft.Json;
+
 namespace shootcraft.src
 {
+   [JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(BlockConverter))]
    public class Block : IBlockRegisterable
    {
       public Vector2 pos;
       public Color4 color;
+      [JsonProperty]
+      public string type;
 
       public static float width = 20.0f;
 
@@ -22,12 +27,19 @@ namespace shootcraft.src
       {
          pos = Vector2.Zero;
          color = Color4.Black;
+         type = "none";
       }
 
-      public Block(Vector2 pos, Color4 color)
+      public Block(string type)
+      {
+         this.type = type;
+      }
+
+      public Block(Vector2 pos, Color4 color, string type)
       {
          this.pos = pos;
          this.color = color;
+         this.type = type;
       }
 
       public void DrawBorders()

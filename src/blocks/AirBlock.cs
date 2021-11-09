@@ -11,6 +11,7 @@ namespace shootcraft.src.blocks
    public class AirBlock : Block
    {
       public AirBlock() : base() { }
-      public AirBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.AliceBlue) { }
+      public AirBlock(string type) : base("air") { }
+      public AirBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.AliceBlue, "air") { }
    }
 }
