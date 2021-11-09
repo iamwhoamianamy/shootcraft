@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
@@ -66,6 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="InputHandler.cs" />
     <Compile Include="src\Block.cs" />
+    <Compile Include="src\blocks\WaterBlock.cs" />
     <Compile Include="src\ClassesHandler.cs" />
     <Compile Include="src\IBlockRegisterable.cs" />
     <Compile Include="src\TexturesHandler.cs" />

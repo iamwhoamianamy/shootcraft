@@ -11,10 +11,12 @@ namespace shootcraft.src
    public class ChunkHandler
    {
       private Dictionary<int, Chunk> chunks;
+      private NoiseGenerator noiseGenerator;
 
       public ChunkHandler()
       {
          chunks = new Dictionary<int, Chunk>();
+         noiseGenerator = new NoiseGenerator();
       }
 
       //public void AddChunk(Chunk chunk)
@@ -37,7 +39,7 @@ namespace shootcraft.src
       {
          if (!chunks.ContainsKey(chunkId))
          {
-            Chunk chunk = new Chunk(chunkId);
+            Chunk chunk = new Chunk(chunkId, noiseGenerator.fPerlinNoise1D);
             chunks.Add(chunkId, chunk);
 
             Logger.Log($"Created chunk {chunkId}");

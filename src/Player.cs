@@ -35,7 +35,7 @@ namespace shootcraft.src
       public static float width = 10.0f;
       public Rectangle hull;
 
-      public float speed = 2.0f;
+      public float speed = 20.0f;
       public float jumpMomentum = 100.0f;
 
       public Cursor cursor;
