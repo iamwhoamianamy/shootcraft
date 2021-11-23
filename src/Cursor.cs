@@ -22,7 +22,6 @@ namespace shootcraft.src
       }
       public void Draw()
       {
-
          GL.Color4(Color4.Black);
          GL.Begin(PrimitiveType.Lines);
 
@@ -34,6 +33,5 @@ namespace shootcraft.src
 
          GL.End();
       }
-
    }
 }

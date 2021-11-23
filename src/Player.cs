@@ -31,8 +31,10 @@ namespace shootcraft.src
 
       public static float height = 40.0f;
       public static float width = 10.0f;
-      public float speed = 20.0f;
-      public float jumpMomentum = 100.0f;
+      public float speed = 5.0f;
+      public float runningSpeed = 7.5f;
+      public float jumpMomentum = 150.0f;
+      public float accessRadius = 150.0f;
 
       public Cursor cursor;
       public Rectangle hull;
@@ -387,7 +389,7 @@ namespace shootcraft.src
 
       public void ResolveCollisionOnMoving(Vector2 shift)
       {
-         int repeats = 10;
+         int repeats = 15;
          Vector2 step = shift / repeats;
 
          for (int r = 0; r < repeats; r++)
@@ -409,7 +411,7 @@ namespace shootcraft.src
 
       public void ResolveCollisionPrediction(float ellapsed)
       {
-         int repeats = 10;
+         int repeats = 15;
          float iter_duration = ellapsed / repeats;
 
          bool doIntersect = false;
@@ -465,6 +467,24 @@ namespace shootcraft.src
          GL.Vertex2(hull.leftBot);
 
          GL.End();
+      }
+
+      public void DrawCursor()
+      {
+         //if (Vector2.DistanceSquared(cursor.pos, pos) < 10000)
+         cursor.Draw();
+      }
+
+      public Block GetBlockUnderCursor()
+      {
+         Vector2 cursPos = cursor.pos;
+         cursPos -= pos;
+         cursPos = cursPos.Limit(accessRadius);
+         cursPos += pos;
+
+         var cursorBlock = World.GetBlock(cursPos);
+
+         return cursorBlock;
       }
 
       public void GoLeft()

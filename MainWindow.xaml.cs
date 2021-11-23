@@ -36,8 +36,9 @@ namespace shootcraft
       private int screenW = 800, screenH = 450;
       private Player player;
       private Vector2 screenCenter;
-      private float GForce = 3500.0f;
+      private float GForce = 12500.0f;
       private Vector2 translation;
+      private float scale;
       private int currentChunk = 0;
       private int currentBlock = 0;
 
@@ -62,6 +63,8 @@ namespace shootcraft
 
          screenCenter.X = screenW / 2;
          screenCenter.Y = screenH / 2;
+
+         scale = 1.0f;
 
          World.Init();
          player = new Player(new Vector2(screenCenter.X, 600));
@@ -106,6 +109,10 @@ namespace shootcraft
          translation = new Vector2((float)Width / 2 - player.pos.X,
             (float)Height / 2 - player.pos.Y);
 
+         GL.Translate(screenCenter.X, screenCenter.Y, 0);
+         GL.Scale(scale, scale, 0);
+         GL.Translate(-screenCenter.X, -screenCenter.Y, 0);
+
          GL.Translate(translation.X, translation.Y, 0);
 
          Vector2 drawing_center = player.pos;
@@ -122,12 +129,16 @@ namespace shootcraft
          Chunk cursor_chunk = World.GetChunk(player.cursor.pos);
          currentChunk = cursor_chunk.Index;
          //cursor_chunk.DrawBorders();
-         Block cursor_block = cursor_chunk.GetBlock(player.cursor.pos);
+         Block cursor_block = player.GetBlockUnderCursor();
          cursor_block.DrawBorders();
 
-         player.cursor.Draw();
+         player.DrawCursor();
 
          GL.Translate(-translation.X, -translation.Y, 0);
+
+         GL.Translate(screenCenter.X, screenCenter.Y, 0);
+         GL.Scale(1 / scale, 1 / scale, 0);
+         GL.Translate(-screenCenter.X, -screenCenter.Y, 0);
 
          glControl.SwapBuffers();
 
