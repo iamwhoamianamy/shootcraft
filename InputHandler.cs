@@ -34,21 +34,21 @@ namespace shootcraft
       private void glControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
       {
          float x = e.X;
+         x /= globalScaling;
 
-         x -= screenCenter.X;
+         x -= screenCenterGame.X;
          x /= scale;
-         x += screenCenter.X;
+         x += screenCenterGame.X;
 
          x -= translation.X;
-
          player.cursor.pos.X = x;
 
-         float y = glControl.Height;
-         y -= e.Y;
+         float y = glControl.Height - e.Y;
+         y /= globalScaling;
 
-         y -= screenCenter.Y;
+         y -= screenCenterGame.Y;
          y /= scale;
-         y += screenCenter.Y;
+         y += screenCenterGame.Y;
 
          y -= translation.Y;
          player.cursor.pos.Y = y;

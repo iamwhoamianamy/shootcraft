@@ -35,12 +35,14 @@ namespace shootcraft
       private Logger logger;
       private int screenW = 800, screenH = 450;
       private Player player;
-      private Vector2 screenCenter;
-      private float GForce = 12500.0f;
+      private Vector2 screenCenterWindow;
+      private Vector2 screenCenterGame;
+      private float GForce = 625.0f;
       private Vector2 translation;
       private float scale;
       private int currentChunk = 0;
       private int currentBlock = 0;
+      private float globalScaling = 20.0f;
 
       public MainWindow()
       {
@@ -61,13 +63,13 @@ namespace shootcraft
          logger = Logger.Get();
          TexturesHandler.Init();
 
-         screenCenter.X = screenW / 2;
-         screenCenter.Y = screenH / 2;
+         screenCenterWindow.X = screenW / 2;
+         screenCenterWindow.Y = screenH / 2;
 
          scale = 1.0f;
 
          World.Init();
-         player = new Player(new Vector2(screenCenter.X, 600));
+         player = new Player(new Vector2(0, 20));
 
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;
@@ -106,12 +108,11 @@ namespace shootcraft
          // Draw objects here
          GL.ClearColor(0.1f, 0.2f, 0.5f, 0.0f);
 
-         translation = new Vector2((float)Width / 2 - player.pos.X,
-            (float)Height / 2 - player.pos.Y);
+         translation = screenCenterGame - player.pos;
 
-         GL.Translate(screenCenter.X, screenCenter.Y, 0);
+         GL.Translate(screenCenterGame.X, screenCenterGame.Y, 0);
          GL.Scale(scale, scale, 0);
-         GL.Translate(-screenCenter.X, -screenCenter.Y, 0);
+         GL.Translate(-screenCenterGame.X, -screenCenterGame.Y, 0);
 
          GL.Translate(translation.X, translation.Y, 0);
 
@@ -126,8 +127,8 @@ namespace shootcraft
          //Block player_block = player_chunk.GetBlock(player.pos);
          //player_block.DrawBorders();
 
-         Chunk cursor_chunk = World.GetChunk(player.cursor.pos);
-         currentChunk = cursor_chunk.Index;
+         //Chunk cursor_chunk = World.GetChunk(player.cursor.pos);
+         //currentChunk = cursor_chunk.Index;
          //cursor_chunk.DrawBorders();
          Block cursor_block = player.GetBlockUnderCursor();
          cursor_block.DrawBorders();
@@ -136,9 +137,9 @@ namespace shootcraft
 
          GL.Translate(-translation.X, -translation.Y, 0);
 
-         GL.Translate(screenCenter.X, screenCenter.Y, 0);
+         GL.Translate(screenCenterGame.X, screenCenterGame.Y, 0);
          GL.Scale(1 / scale, 1 / scale, 0);
-         GL.Translate(-screenCenter.X, -screenCenter.Y, 0);
+         GL.Translate(-screenCenterGame.X, -screenCenterGame.Y, 0);
 
          glControl.SwapBuffers();
 
@@ -150,14 +151,16 @@ namespace shootcraft
          screenW = glControl.Width;
          screenH = glControl.Height;
 
-         screenCenter.X = screenW / 2;
-         screenCenter.Y = screenH / 2;
+         screenCenterWindow.X = screenW / 2;
+         screenCenterWindow.Y = screenH / 2;
+
+         screenCenterGame = screenCenterWindow / globalScaling;
 
          GL.Disable(EnableCap.DepthTest);
          GL.Viewport(0, 0, screenW, screenH);
          GL.MatrixMode(MatrixMode.Projection);
          GL.LoadIdentity();
-         GL.Ortho(0, screenW, 0, screenH, -1.0, 1.0);
+         GL.Ortho(0, screenW / globalScaling, 0, screenH / globalScaling, -1.0, 1.0);
          GL.MatrixMode(MatrixMode.Modelview);
          GL.LoadIdentity();
       }

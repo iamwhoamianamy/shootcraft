@@ -24,7 +24,7 @@ namespace shootcraft.src
       public Chunk(int index, NoiseGenerator perlinNoise)
       {
          Index = index;
-         StartX = index * Chunk.blockCountX * Block.width;
+         StartX = index * Chunk.blockCountX;
          _blocks = new Block[blockCountY][];
 
          for (int i = 0; i < blockCountY; i++)
@@ -36,14 +36,20 @@ namespace shootcraft.src
          {
             for (int j = 0; j < blockCountX; j++)
             {
-               Vector2 block_pos = new Vector2(StartX + j * Block.width + Block.width / 2, i * Block.width + Block.width / 2);
+               Vector2 block_pos = new Vector2(StartX + j + 0.5f, i + 0.5f);
 
-               if ((int)(block_pos.Y / Block.width) < perlinNoise.perlinNoise[perlinNoise.length / 2 + (int)Math.Floor(block_pos.X / Block.width)] + 10)
+               if(block_pos.Y < 10)
                   _blocks[i][j] = new DirtBlock(block_pos);
-               else if ((int)(block_pos.Y / Block.width) < 16)
-                  _blocks[i][j] = new WaterBlock(block_pos);
                else
                   _blocks[i][j] = new AirBlock(block_pos);
+
+
+               //if ((int)(block_pos.Y / Block.width) < perlinNoise.perlinNoise[perlinNoise.length / 2 + (int)Math.Floor(block_pos.X / Block.width)] + 10)
+               //   _blocks[i][j] = new DirtBlock(block_pos);
+               //else if ((int)(block_pos.Y / Block.width) < 16)
+               //   _blocks[i][j] = new WaterBlock(block_pos);
+               //else
+               //   _blocks[i][j] = new AirBlock(block_pos);
             }
          }
       }
@@ -55,17 +61,17 @@ namespace shootcraft.src
          GL.Begin(PrimitiveType.LineLoop);
 
          GL.Vertex2(StartX, 0);
-         GL.Vertex2(StartX, blockCountY * Block.width);
-         GL.Vertex2(StartX + blockCountX * Block.width, blockCountY * Block.width);
-         GL.Vertex2(StartX + blockCountX * Block.width, 0);
+         GL.Vertex2(StartX, blockCountY);
+         GL.Vertex2(StartX + blockCountX, blockCountY);
+         GL.Vertex2(StartX + blockCountX, 0);
 
          GL.End();
       }
 
       public bool ContainsBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
       {
-         int block_x_id = (int)(pos.X / Block.width) - Index * blockCountX + offsetX;
-         int block_y_id = (int)Math.Min(blockCountY - 1, Math.Max(pos.Y / Block.width, 0)) + offsetY;
+         int block_x_id = (int)(pos.X) - Index * blockCountX + offsetX;
+         int block_y_id = (int)Math.Min(blockCountY - 1, Math.Max(pos.Y, 0)) + offsetY;
 
          if (0 <= block_x_id && block_x_id < blockCountX &&
              0 <= block_y_id && block_y_id < blockCountY)
@@ -76,16 +82,16 @@ namespace shootcraft.src
 
       public void SetBlock(Vector2 pos, Block block, int offsetX = 0, int offsetY = 0)
       {
-         int block_x_id = (int)Math.Floor(pos.X / Block.width) - Index * blockCountX + offsetX;
-         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y / Block.width, 0))) + offsetY;
+         int block_x_id = (int)Math.Floor(pos.X) - Index * blockCountX + offsetX;
+         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y, 0))) + offsetY;
 
             _blocks[block_y_id][block_x_id] = block;
       }
 
       public Block GetBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
       {
-         int block_x_id = (int)Math.Floor(pos.X / Block.width) - Index * blockCountX + offsetX;
-         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y / Block.width, 0))) + offsetY;
+         int block_x_id = (int)Math.Floor(pos.X) - Index * blockCountX + offsetX;
+         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y, 0))) + offsetY;
 
          if (block_x_id < 0 || block_y_id < 0)
          {

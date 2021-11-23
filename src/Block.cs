@@ -16,8 +16,6 @@ namespace shootcraft.src
       public Vector2 pos;
       public Color4 color;
 
-      public static float width = 20.0f;
-
       public Block()
       {
          pos = Vector2.Zero;
@@ -94,7 +92,7 @@ namespace shootcraft.src
 
       public Rectangle GetRectangle()
       {
-         return new Rectangle(pos, width);
+         return new Rectangle(pos, 1.0f);
       }
    }
 }

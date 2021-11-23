@@ -14,7 +14,7 @@ namespace shootcraft.src
    {
       public Vector2 pos;
       public float scale = 1.0f;
-      public float size = 10.0f;
+      public float size = 0.5f;
 
       public Cursor()
       {

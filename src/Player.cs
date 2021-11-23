@@ -29,12 +29,12 @@ namespace shootcraft.src
       private Vector2 vel;
       private Vector2 acc;
 
-      public static float height = 40.0f;
-      public static float width = 10.0f;
-      public float speed = 5.0f;
+      public static float height = 2.0f;
+      public static float width = 0.5f;
+      public float speed = 0.4f;
       public float runningSpeed = 7.5f;
-      public float jumpMomentum = 150.0f;
-      public float accessRadius = 150.0f;
+      public float jumpMomentum = 7.5f;
+      public float accessRadius = 7.5f;
 
       public Cursor cursor;
       public Rectangle hull;
@@ -87,7 +87,7 @@ namespace shootcraft.src
          foreach (var block in blocks)
          {
             if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) &&
-             Math.Abs(pos.Y - height / 4 - (block.pos.Y + Block.width)) < 1e-2)
+             Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f)) < 1e-2)
                IsStanding = true;
             else
                IsStanding = false;

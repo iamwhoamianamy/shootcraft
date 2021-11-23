@@ -27,12 +27,12 @@ namespace shootcraft.src
 
       public static int PosToChunkId(Vector2 pos)
       {
-         return (int)Math.Floor(pos.X / (Chunk.blockCountX * Block.width));
+         return (int)Math.Floor(pos.X / (Chunk.blockCountX));
       }
 
       public static Chunk GetChunk(Vector2 pos, int blockOffsetX = 0)
       {
-         return GetChunk(PosToChunkId(pos + new Vector2(Block.width * blockOffsetX, 0)));
+         return GetChunk(PosToChunkId(pos + new Vector2(blockOffsetX, 0)));
       }
 
       public static Chunk GetChunk(int chunkId)
