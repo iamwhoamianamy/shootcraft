@@ -38,18 +38,12 @@ namespace shootcraft.src
             {
                Vector2 block_pos = new Vector2(StartX + j + 0.5f, i + 0.5f);
 
-               if(block_pos.Y < 10)
+               if (block_pos.Y < perlinNoise.perlinNoise[perlinNoise.length / 2 + (int)Math.Floor(block_pos.X)] + 10)
                   _blocks[i][j] = new DirtBlock(block_pos);
+               else if ((int)(block_pos.Y) < 16)
+                  _blocks[i][j] = new WaterBlock(block_pos);
                else
                   _blocks[i][j] = new AirBlock(block_pos);
-
-
-               //if ((int)(block_pos.Y / Block.width) < perlinNoise.perlinNoise[perlinNoise.length / 2 + (int)Math.Floor(block_pos.X / Block.width)] + 10)
-               //   _blocks[i][j] = new DirtBlock(block_pos);
-               //else if ((int)(block_pos.Y / Block.width) < 16)
-               //   _blocks[i][j] = new WaterBlock(block_pos);
-               //else
-               //   _blocks[i][j] = new AirBlock(block_pos);
             }
          }
       }

@@ -69,7 +69,7 @@ namespace shootcraft
          scale = 1.0f;
 
          World.Init();
-         player = new Player(new Vector2(0, 20));
+         player = new Player(new Vector2(0, 40.0f));
 
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;
