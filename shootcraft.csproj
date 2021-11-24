@@ -96,7 +96,6 @@
     </ApplicationDefinition>
     <Compile Include="InputHandler.cs" />
     <Compile Include="src\Block.cs" />
-    <Compile Include="src\BlockConverter.cs" />
     <Compile Include="src\ClassesHandler.cs" />
     <Compile Include="src\IBlockRegisterable.cs" />
     <Compile Include="src\SavesHandler.cs" />
@@ -112,6 +111,7 @@
     <Compile Include="src\Player.cs" />
     <Compile Include="src\Position.cs" />
     <Compile Include="src\Rectangle.cs" />
+    <Compile Include="src\Vector2Converter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

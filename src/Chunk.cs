@@ -64,12 +64,12 @@ namespace shootcraft.src
                Vector2 block_pos = new Vector2(StartX + j * Block.width + Block.width / 2, i * Block.width + Block.width / 2);
 
 
-               switch(_blocks[i][j].type)
+               switch(_blocks[i][j].GetType().ToString())
                {
-                  case "dirt":
+                  case "shootcraft.src.blocks.DirtBlock":
                      _blocks[i][j] = new DirtBlock(block_pos);
                      break;
-                  case "air":
+                  case "shootcraft.src.blocks.AirBlock":
                      _blocks[i][j] = new AirBlock(block_pos);
                      break;
                   default:

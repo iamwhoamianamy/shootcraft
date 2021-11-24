@@ -65,9 +65,18 @@ namespace shootcraft
          screenCenter.X = screenW / 2;
          screenCenter.Y = screenH / 2;
 
-         chunkHandler = SavesHandler.RestoreFromJson("world1");
-         //chunkHandler = new ChunkHandler();
-         player = new Player(screenCenter);
+         
+         if(true)
+         {
+            chunkHandler = new ChunkHandler();
+            player = new Player(screenCenter);
+         }
+         else
+         {
+            chunkHandler = SavesHandler.RestoreWorldFromJson("world1");
+            player = SavesHandler.RestorePlayerFromJson("world1");
+         }
+
 
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;
@@ -157,7 +166,7 @@ namespace shootcraft
       private void Window_Closed(object sender, EventArgs e)
       {
          Logger.Close();
-         SavesHandler.SaveToJson(chunkHandler, "world1");
+         SavesHandler.SaveToJson(chunkHandler, player, "world1");
       }
    }
 }

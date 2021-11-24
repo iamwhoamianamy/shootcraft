@@ -7,32 +7,33 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using OpenTK;
+
 using shootcraft.src.blocks;
 
 namespace shootcraft.src
 {
-   public class BlockConverter : JsonConverter
+   public class Vector2Converter : JsonConverter
    {
       public override bool CanConvert(Type objectType)
       {
-         return objectType == typeof(Block);
+         return objectType == typeof(Vector2);
       }
 
       public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
       {
+         Vector2 vector;
          var jsonObject = JObject.Load(reader);
          var properties = jsonObject.Properties().ToList();
-         if (properties[0].Value.ToString() == "air")
-            return new AirBlock("air");
-         if (properties[0].Value.ToString() == "dirt")
-            return new DirtBlock("dirt");
-         throw new NotImplementedException();
+         vector.X = Single.Parse(properties[1].Value.ToString());
+         vector.Y = Single.Parse(properties[2].Value.ToString());
+         return vector;
       }
 
       public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
       {
-         var block = (Block)value;
-         serializer.Serialize(writer, new { block.type });
+         var vector = (Vector2)value;
+         serializer.Serialize(writer, new { vector.X, vector.Y });
       }
    }
 }

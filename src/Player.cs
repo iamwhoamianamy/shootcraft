@@ -10,12 +10,15 @@ using OpenTK;
 
 using shootcraft.src.blocks;
 
+using Newtonsoft.Json;
+
 namespace shootcraft.src
 {
+   [JsonObject(MemberSerialization.OptIn)]
    public class Player
    {
+      [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
       private Vector2 _pos;
-
       public Vector2 pos
       {
          get { return _pos; }
@@ -25,8 +28,9 @@ namespace shootcraft.src
             BuildHull();
          }
       }
-
+      [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
       private Vector2 vel;
+      [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
       private Vector2 acc;
 
       public static float height = 40.0f;
@@ -41,6 +45,7 @@ namespace shootcraft.src
       public Cursor cursor;
 
       public bool IsStanding { get; private set; }
+      [JsonProperty]
       public Color4 color;
 
       public Player(Vector2 pos)
