@@ -29,6 +29,7 @@ namespace shootcraft.src
       private Vector2 vel;
       private Vector2 acc;
 
+<<<<<<< Updated upstream
       public static float height = 40.0f;
       //public static float knees = height / 4;
       //public static float torso = height / 4 * 3;
@@ -37,6 +38,14 @@ namespace shootcraft.src
 
       public float speed = 20.0f;
       public float jumpMomentum = 100.0f;
+=======
+      public static float height = 2.0f;
+      public static float width = 0.5f;
+      public float speed = 0.6f;
+      public float runningSpeed = 7.5f;
+      public float jumpMomentum = 7.5f;
+      public float accessRadius = 7.5f;
+>>>>>>> Stashed changes
 
       public Cursor cursor;
 
