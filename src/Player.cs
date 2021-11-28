@@ -37,7 +37,7 @@ namespace shootcraft.src
       public static float width = 0.5f;
       public float speed = 0.6f;
       public float runningSpeed = 7.5f;
-      public float jumpMomentum = 7.5f;
+      public float jumpMomentum = 5.5f;
       public float accessRadius = 7.5f;
 
       public Cursor cursor;
@@ -63,13 +63,13 @@ namespace shootcraft.src
 
          color = Color4.Blue;
 
-         UpdateSurroundingBlocks();
+         SetSurroundingBlocks();
       }
 
       public void BuildHull()
       {
          hull = new Rectangle(
-         pos + new Vector2(-width / 2, height / 2 ),
+         pos + new Vector2(-width / 2, height / 2),
          pos + new Vector2(width / 2, height / 2),
          pos + new Vector2(width / 2, -height / 2),
          pos + new Vector2(-width / 2, -height / 2));
@@ -101,11 +101,11 @@ namespace shootcraft.src
 
       public void CheckForWater()
       {
-        UpdateSurroundingBlocks();
+        SetSurroundingBlocks();
 
          foreach (var block in surroundingBlocks)
          {
-            if (block.GetType() == typeof(WaterBlock) && hull.Intersect(block.GetRectangle()))
+            if ((block is WaterBlock) && hull.Intersect(block.GetRectangle()))
             {
                IsWaterLogged = true;
                color = Color4.Yellow;
@@ -118,7 +118,7 @@ namespace shootcraft.src
          IsWaterLogged = false;
       }
 
-      private void UpdateSurroundingBlocks()
+      private void SetSurroundingBlocks()
       {
          surroundingBlocks = new List<Block>();
 
@@ -394,7 +394,7 @@ namespace shootcraft.src
 
       public void ResolveCollisionOnMoving(Vector2 shift)
       {
-         int repeats = 15;
+         int repeats = 30;
          Vector2 step = shift / repeats;
 
          for (int r = 0; r < repeats; r++)
@@ -402,11 +402,11 @@ namespace shootcraft.src
             Vector2 nextPos = hull.center + step;
             Rectangle newHull = new Rectangle(nextPos, width, height);
 
-            UpdateSurroundingBlocks();
+            SetSurroundingBlocks();
 
             foreach (var block in surroundingBlocks)
             {
-               if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) && newHull.Intersect(block.GetRectangle()))
+               if (!(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
                   return;
             }
 
@@ -416,21 +416,22 @@ namespace shootcraft.src
 
       public void ResolveCollisionPrediction(float ellapsed)
       {
-         int repeats = 15;
+         int repeats = 50;
          float iter_duration = ellapsed / repeats;
 
          bool doIntersect = false;
 
          for (int r = 0; r < repeats; r++)
          {
-            Vector2 nextPos = hull.center + vel * iter_duration + acc * iter_duration * iter_duration / 2;
+            Vector2 nextVel = vel + acc * iter_duration;
+            Vector2 nextPos = hull.center + vel * iter_duration;
             Rectangle newHull = new Rectangle(nextPos, width, height);
 
-            UpdateSurroundingBlocks();
+            SetSurroundingBlocks();
 
             foreach (var block in surroundingBlocks)
             {
-               if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) && newHull.Intersect(block.GetRectangle()))
+               if (!(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
                {
                   doIntersect = true;
                   break;
@@ -445,10 +446,47 @@ namespace shootcraft.src
             }
             else
             {
+               vel = nextVel;
                pos = nextPos;
             }
          }
       }
+
+      //public void ResolveCollisionPrediction(float ellapsed)
+      //{
+      //   int repeats = 30;
+      //   float iter_duration = ellapsed / repeats;
+
+      //   bool doIntersect = false;
+
+      //   for (int r = 0; r < repeats; r++)
+      //   {
+      //      Vector2 nextPos = hull.center + vel * iter_duration + acc * iter_duration * iter_duration / 2;
+      //      Rectangle newHull = new Rectangle(nextPos, width, height);
+
+      //      SetSurroundingBlocks();
+
+      //      foreach (var block in surroundingBlocks)
+      //      {
+      //         if (!(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
+      //         {
+      //            doIntersect = true;
+      //            break;
+      //         }
+      //      }
+
+      //      if (doIntersect)
+      //      {
+      //         acc = Vector2.Zero;
+      //         vel = Vector2.Zero;
+      //         return;
+      //      }
+      //      else
+      //      {
+      //         pos = nextPos;
+      //      }
+      //   }
+      //}
 
       public void ApplyForce(Vector2 force)
       {

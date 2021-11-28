@@ -37,7 +37,7 @@ namespace shootcraft
       private Player player;
       private Vector2 screenCenterWindow;
       private Vector2 screenCenterGame;
-      private float GForce = 625.0f;
+      private float GForce = 1.2f;
       private Vector2 translation;
       private float scale;
       private int currentChunk = 0;
@@ -69,18 +69,16 @@ namespace shootcraft
          scale = 1.0f;
 
          World.Init();
+
          if (false)
          {
             player = new Player(new Vector2(0, 40.0f));
          }
          else
          {
-            World.RestoreWorldFromJson("world1");
+            World.RestoreFromJson("world1");
             player = SavesHandler.RestorePlayerFromJson("world1");
          }
-
-
-
 
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;

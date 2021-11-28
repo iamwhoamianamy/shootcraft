@@ -15,19 +15,13 @@ namespace shootcraft.src
    public static class World
    {
       private static Dictionary<int, Chunk> chunks;
-      public static NoiseGenerator noiseGenerator;
+      public static PerlinNoise perlinNoise;
 
       public static void Init()
       {
          chunks = new Dictionary<int, Chunk>();
-         noiseGenerator = new NoiseGenerator();
+         perlinNoise = new PerlinNoise();
       }
-
-      //public void AddChunk(Chunk chunk)
-      //{
-      //   if(!chunks.ContainsKey(chunk.BegPos))
-      //      chunks.Add(chunk.BegPos, chunk);
-      //}
 
       public static void RestoreChunks()
       {
@@ -39,13 +33,19 @@ namespace shootcraft.src
 
       public static int PosToChunkId(Vector2 pos)
       {
-         return (int)Math.Floor(pos.X / (Chunk.blockCountX));
+         return (int)Math.Floor(pos.X / Chunk.blockCountX);
       }
 
       public static Chunk GetChunk(Vector2 pos, int blockOffsetX = 0)
       {
          return GetChunk(PosToChunkId(pos + new Vector2(blockOffsetX, 0)));
       }
+
+      public static int PerlinValueForX(float x)
+      {
+         return perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(x)];
+      }
+
 
       public static Chunk GetChunk(int chunkId)
       {
@@ -54,9 +54,9 @@ namespace shootcraft.src
             Chunk chunk = new Chunk(chunkId);
             chunks.Add(chunkId, chunk);
 
-            if (noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
+            if (perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
             {
-               Tree tree = Tree.SmallTree(new Vector2(chunk.StartX + 4.0f, noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
+               Tree tree = Tree.SmallTree(new Vector2(chunk.StartX + 4.0f, perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
 
                for (int i = 0; i < tree.Height; i++)
                {
@@ -101,22 +101,26 @@ namespace shootcraft.src
          string jsonString;
          var settings = new JsonSerializerSettings();
          settings.TypeNameHandling = TypeNameHandling.Objects;
+
          jsonString = JsonConvert.SerializeObject(chunks, Formatting.Indented, settings);
          File.WriteAllText(SavesHandler.path + name + "/worlddata.json", jsonString);
-         jsonString = JsonConvert.SerializeObject(noiseGenerator, Formatting.Indented, settings);
+
+         jsonString = JsonConvert.SerializeObject(perlinNoise, Formatting.Indented, settings);
          File.WriteAllText(SavesHandler.path + name + "/noisedata.json", jsonString);
       }
 
-      public static void RestoreWorldFromJson(string name)
+      public static void RestoreFromJson(string name)
       {
          string jsonString;
          var settings = new JsonSerializerSettings();
-         //settings.Converters.Add(new BlockConverter());
          settings.TypeNameHandling = TypeNameHandling.Objects;
+
          jsonString = File.ReadAllText(SavesHandler.path + name + "/noisedata.json");
-         noiseGenerator = JsonConvert.DeserializeObject<NoiseGenerator>(jsonString, settings);
+         perlinNoise = JsonConvert.DeserializeObject<PerlinNoise>(jsonString, settings);
+
          jsonString = File.ReadAllText(SavesHandler.path + name + "/worlddata.json");
          chunks = JsonConvert.DeserializeObject<Dictionary<int, Chunk>>(jsonString, settings);
+
          RestoreChunks();
       }
    }

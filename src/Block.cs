@@ -51,25 +51,19 @@ namespace shootcraft.src
             TexturesHandler.blockTextures[this.GetType()]);
 
          GL.Enable(EnableCap.Texture2D);
-         GL.Begin(BeginMode.Triangles);
+         GL.Begin(PrimitiveType.Quads);
 
          GL.TexCoord2(new Vector2(0, 0));
-         GL.Vertex2(rect.leftBot.X, rect.leftBot.Y);
-
-         GL.TexCoord2(new Vector2(0, 1));
-         GL.Vertex2(rect.leftTop.X, rect.leftTop.Y);
+         GL.Vertex2(rect.rightTop.X, rect.rightTop.Y);
 
          GL.TexCoord2(new Vector2(1, 0));
-         GL.Vertex2(rect.rightBot.X, rect.rightBot.Y);
-
-         GL.TexCoord2(new Vector2(1, 0));
-         GL.Vertex2(rect.rightBot.X, rect.rightBot.Y);
-
-         GL.TexCoord2(new Vector2(0, 1));
          GL.Vertex2(rect.leftTop.X, rect.leftTop.Y);
 
          GL.TexCoord2(new Vector2(1, 1));
-         GL.Vertex2(rect.rightTop.X, rect.rightTop.Y);
+         GL.Vertex2(rect.leftBot.X, rect.leftBot.Y);
+
+         GL.TexCoord2(new Vector2(0, 1));
+         GL.Vertex2(rect.rightBot.X, rect.rightBot.Y);
 
          GL.End();
          GL.Disable(EnableCap.Texture2D);

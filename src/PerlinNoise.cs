@@ -10,26 +10,27 @@ using Newtonsoft.Json;
 namespace shootcraft.src
 {
    [JsonObject(MemberSerialization.OptIn)]
-   public class NoiseGenerator
+   public class PerlinNoise
    {
       public int length = 10000;
+
       [JsonProperty]
-      public List<int> perlinNoise;
+      public List<int> values;
 
-      int nOctaveCount = 9;
-      double fScalingBias = 0.05;
+      int octaveCount = 9;
+      double scalingBias = 0.05;
 
-      public NoiseGenerator()
+      public PerlinNoise()
       {
          List<double> noiseSeed;
          noiseSeed = new List<double>();
-         perlinNoise = new List<int>();
+         values = new List<int>();
          Random rand = new Random();
 
          for (int i = 0; i < length; i++)
             noiseSeed.Add(rand.NextDouble());
 
-         PerlinNoise1D(noiseSeed, nOctaveCount, fScalingBias);
+         PerlinNoise1D(noiseSeed, octaveCount, scalingBias);
 
       }
 
@@ -56,7 +57,7 @@ namespace shootcraft.src
                scale = scale / bias;
             }
            
-            perlinNoise.Add((int)((noise / scaleAcc) * 15) + 10);
+            values.Add((int)((noise / scaleAcc) * 15) + 10);
          }
       }
 

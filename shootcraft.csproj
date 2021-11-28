@@ -99,6 +99,7 @@
     </ApplicationDefinition>
     <Compile Include="InputHandler.cs" />
     <Compile Include="src\Block.cs" />
+    <Compile Include="src\blocks\GrassBlock.cs" />
     <Compile Include="src\blocks\LeavesBlock.cs" />
     <Compile Include="src\blocks\SandBlock.cs" />
     <Compile Include="src\blocks\WaterBlock.cs" />
@@ -116,7 +117,7 @@
     <Compile Include="src\Cursor.cs" />
     <Compile Include="src\GameHelper.cs" />
     <Compile Include="src\Logger.cs" />
-    <Compile Include="src\NoiseGenerator.cs" />
+    <Compile Include="src\PerlinNoise.cs" />
     <Compile Include="src\Player.cs" />
     <Compile Include="src\Position.cs" />
     <Compile Include="src\Rectangle.cs" />
