@@ -16,37 +16,50 @@ namespace shootcraft.src
       private Block[][] _blocks;
 
       public int Index { get; private set; }
-      public float StartX { get; private set; }
+      public int PerlinSurface { get; private set; }
+      public int StartX { get; private set; }
 
-      public static int blockCountX = 4;
+      public static int blockCountX = 8;
       public static int blockCountY = 60;
 
       public Chunk(int index, NoiseGenerator perlinNoise)
       {
+         InitChunk(index);
+         ParamChunk(perlinNoise);
+      }
+
+      public void InitChunk(int index)
+      {
          Index = index;
          StartX = index * Chunk.blockCountX;
          _blocks = new Block[blockCountY][];
-
          for (int i = 0; i < blockCountY; i++)
-         {
             _blocks[i] = new Block[blockCountX];
-         }
+      }
 
+      public void ParamChunk(NoiseGenerator perlinNoise)
+      {
          for (int i = 0; i < blockCountY; i++)
          {
             for (int j = 0; j < blockCountX; j++)
             {
                Vector2 block_pos = new Vector2(StartX + j + 0.5f, i + 0.5f);
-
-               if (block_pos.Y < perlinNoise.perlinNoise[perlinNoise.length / 2 + (int)Math.Floor(block_pos.X)] + 10)
+               PerlinSurface = perlinNoise.perlinNoise[perlinNoise.length / 2 + (int)Math.Floor(block_pos.X)];
+               if (block_pos.Y < PerlinSurface)
+               {
                   _blocks[i][j] = new DirtBlock(block_pos);
+               }
                else if ((int)(block_pos.Y) < 16)
+               {
                   _blocks[i][j] = new WaterBlock(block_pos);
+               }
                else
                   _blocks[i][j] = new AirBlock(block_pos);
+ 
             }
          }
       }
+
 
       public void DrawBorders()
       {

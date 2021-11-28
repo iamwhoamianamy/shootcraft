@@ -10,6 +10,6 @@ namespace shootcraft.src.blocks
    class SandBlock : Block
    {
       public SandBlock() : base() { }
-      public SandBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.Yellow) { }
+      public SandBlock(Vector2 pos) : base(pos) { }
    }
 }

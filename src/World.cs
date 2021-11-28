@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using OpenTK;
+using shootcraft.src.structures;
 
 namespace shootcraft.src
 {
@@ -42,6 +43,19 @@ namespace shootcraft.src
             Chunk chunk = new Chunk(chunkId, noiseGenerator);
             chunks.Add(chunkId, chunk);
 
+            if (noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
+            {
+               Tree tree = Tree.SmallTree(new Vector2(chunk.StartX + 4.0f, noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
+
+               for (int i = 0; i < tree.Height; i++)
+               {
+                  for (int j = 0; j < tree.Width; j++)
+                  {
+                     if (tree.blocks[i][j] != null)
+                        SetBlock(tree.blocks[i][j].pos, tree.blocks[i][j]);
+                  }
+               }
+            }
             Logger.Log($"Created chunk {chunkId}");
 
             return chunk;

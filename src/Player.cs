@@ -31,7 +31,7 @@ namespace shootcraft.src
 
       public static float height = 2.0f;
       public static float width = 0.5f;
-      public float speed = 0.4f;
+      public float speed = 0.6f;
       public float runningSpeed = 7.5f;
       public float jumpMomentum = 7.5f;
       public float accessRadius = 7.5f;
