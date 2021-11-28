@@ -12,7 +12,7 @@ namespace shootcraft.src
    static class TexturesHandler
    {
       public static Dictionary<Type, int> blockTextures;
-      private static string path = "../../resources/";
+      private static string blocksPath = "../../resources/textures/";
 
       static TexturesHandler()
       {
@@ -20,7 +20,7 @@ namespace shootcraft.src
 
          foreach (var block in ClassesHandler.Blocks)
          {
-            string texureName = path + block.Name + ".png";
+            string texureName = blocksPath + block.Name + ".png";
             Bitmap texture;
 
             try
@@ -29,7 +29,7 @@ namespace shootcraft.src
             }
             catch
             {
-               texture = new Bitmap(path + "Default.png");
+               texture = new Bitmap(blocksPath + "Default.png");
             }
 
             GL.GenTextures(1, out int textureID);

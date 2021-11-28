@@ -8,9 +8,9 @@ using OpenTK;
 
 namespace shootcraft.src.blocks
 {
-   public class DirtBlock : Block
+   class WoodBlock : Block
    {
-      public DirtBlock() : base() { }
-      public DirtBlock(Vector2 pos) : base(pos) { }
+      public WoodBlock() : base() { }
+      public WoodBlock(Vector2 pos) : base(pos) { }
    }
 }

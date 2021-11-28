@@ -14,7 +14,7 @@ namespace shootcraft.src
    {
       public Vector2 pos;
       public float scale = 1.0f;
-      public float size = 10.0f;
+      public float size = 0.5f;
 
       public Cursor()
       {
@@ -22,7 +22,6 @@ namespace shootcraft.src
       }
       public void Draw()
       {
-
          GL.Color4(Color4.Black);
          GL.Begin(PrimitiveType.Lines);
 
@@ -34,6 +33,5 @@ namespace shootcraft.src
 
          GL.End();
       }
-
    }
 }

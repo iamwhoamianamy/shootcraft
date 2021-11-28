@@ -33,18 +33,20 @@ namespace shootcraft.src
       [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
       private Vector2 acc;
 
-      public static float height = 40.0f;
-      //public static float knees = height / 4;
-      //public static float torso = height / 4 * 3;
-      public static float width = 10.0f;
-      public Rectangle hull;
-
-      public float speed = 2.0f;
-      public float jumpMomentum = 100.0f;
+      public static float height = 2.0f;
+      public static float width = 0.5f;
+      public float speed = 0.6f;
+      public float runningSpeed = 7.5f;
+      public float jumpMomentum = 7.5f;
+      public float accessRadius = 7.5f;
 
       public Cursor cursor;
+      public Rectangle hull;
+      private List<Block> surroundingBlocks;
 
       public bool IsStanding { get; private set; }
+      public bool IsWaterLogged { get; private set; }
+
       [JsonProperty]
       public Color4 color;
 
@@ -57,8 +59,11 @@ namespace shootcraft.src
          cursor = new Cursor();
 
          IsStanding = false;
+         IsWaterLogged = false;
 
          color = Color4.Blue;
+
+         UpdateSurroundingBlocks();
       }
 
       public void BuildHull()
@@ -77,51 +82,68 @@ namespace shootcraft.src
          acc = Vector2.Zero;
       }
 
-      public void CheckForStanding(ChunkHandler chunkHandler)
+      public void CheckForStanding()
       {
          List<Block> blocks = new List<Block>();
 
-         blocks.Add(chunkHandler.GetBlock(pos, 0, -1));
-         blocks.Add(chunkHandler.GetBlock(pos, 0, -2));
+         blocks.Add(World.GetBlock(pos, 0, -1));
+         blocks.Add(World.GetBlock(pos, 0, -2));
 
          foreach (var block in blocks)
          {
-            if (block.GetType() != typeof(AirBlock) &&
-             Math.Abs(pos.Y - height / 4 - (block.pos.Y + Block.width)) < 1e-2)
+            if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) &&
+             Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f)) < 1e-2)
                IsStanding = true;
             else
                IsStanding = false;
          }
       }
 
-      private List<Block> GetSurroundBlocks(ChunkHandler chunkHandler)
+      public void CheckForWater()
       {
-         List<Block> blocks = new List<Block>();
+        UpdateSurroundingBlocks();
+
+         foreach (var block in surroundingBlocks)
+         {
+            if (block.GetType() == typeof(WaterBlock) && hull.Intersect(block.GetRectangle()))
+            {
+               IsWaterLogged = true;
+               color = Color4.Yellow;
+               acc *= IsWaterLogged ? WaterBlock.viscosity : 1.0f;
+               return;
+            }
+         }
+
+         color = Color4.Blue;
+         IsWaterLogged = false;
+      }
+
+      private void UpdateSurroundingBlocks()
+      {
+         surroundingBlocks = new List<Block>();
 
          for (int i = -1; i < 2; i++)
          {
             for (int j = -2; j < 4; j++)
             {
-               blocks.Add(chunkHandler.GetBlock(hull.center, i, j));
+               surroundingBlocks.Add(World.GetBlock(hull.center, i, j));
             }
          }
-
-         return blocks;
       }
 
       #region trash
 
-      //public void ResolveCollisionEfremov(ChunkHandler chunkHandler, float ellapsed)
+      //public void ResolveCollisionEfremov(World World, float ellapsed)
       //{
       //   Vector2 v = pos - new Vector2(0, height / 4);
 
-      //   Block left_upper_block = chunkHandler.GetBlock(v, -1, 1);
-      //   Block right_upper_block = chunkHandler.GetBlock(v, 1, 1);
+      //   Block left_upper_block = World.GetBlock(v, -1, 1);
+      //   Block right_upper_block = World.GetBlock(v, 1, 1);
 
-      //   Block left_middle_block = chunkHandler.GetBlock(v, -1, 0);
-      //   Block right_middle_block = chunkHandler.GetBlock(v, 1, 0);
+      //   Block left_middle_block = World.GetBlock(v, -1, 0);
+      //   Block right_middle_block = World.GetBlock(v, 1, 0);
 
-      //   Block upper_block = chunkHandler.GetBlock(v, 0, 2);
+      //   Block upper_block = World.GetBlock(v, 0, 2);
 
       //   if (left_middle_block.GetType() != typeof(AirBlock) ||
       //       left_upper_block.GetType() != typeof(AirBlock))
@@ -147,9 +169,9 @@ namespace shootcraft.src
       //      }
       //   }
 
-      //   Block center_lower_block = chunkHandler.GetBlock(v, 0, -1);
-      //   Block left_lower_block = chunkHandler.GetBlock(v, -1, -1);
-      //   Block right_lower_block = chunkHandler.GetBlock(v, 1, -1);
+      //   Block center_lower_block = World.GetBlock(v, 0, -1);
+      //   Block left_lower_block = World.GetBlock(v, -1, -1);
+      //   Block right_lower_block = World.GetBlock(v, 1, -1);
 
       //   if (center_lower_block.GetType() != typeof(AirBlock) &&
       //       pos.Y - height / 4 < center_lower_block.pos.Y + Block.width || false)
@@ -185,14 +207,14 @@ namespace shootcraft.src
 
       //}
 
-      //public void ResolveCollisionSAT(ChunkHandler chunkHandler, float ellapsed, int xAxe = 1, int yAxe = 1)
+      //public void ResolveCollisionSAT(World World, float ellapsed, int xAxe = 1, int yAxe = 1)
       //{
       //   int repeats = 1;
       //   float iteration_duration = ellapsed / repeats;
 
       //   for (int r = 0; r < repeats; r++)
       //   {
-      //      List<Block> blocks = GetSurroundBlocks(chunkHandler);
+      //      List<Block> blocks = GetSurroundBlocks(World);
 
       //      for (int block_i = 0; block_i < blocks.Count; block_i++)
       //      {
@@ -285,14 +307,14 @@ namespace shootcraft.src
       //   pos -= t;
       //}
 
-      //public void ResolveCollisionDiagonal(ChunkHandler chunkHandler, float ellapsed)
+      //public void ResolveCollisionDiagonal(World World, float ellapsed)
       //{
       //   int repeats = 1;
       //   float iteration_duration = ellapsed / repeats;
 
       //   for (int r = 0; r < repeats; r++)
       //   {
-      //      List<Block> blocks = GetSurroundBlocks(chunkHandler);
+      //      List<Block> blocks = GetSurroundBlocks(World);
       //      bool is_any_collisions = false;
 
       //      for (int b = 0; b < blocks.Count; b++)
@@ -370,9 +392,9 @@ namespace shootcraft.src
 
       #endregion trash
 
-      public void ResolveCollisionOnMoving(ChunkHandler chunkHandler, Vector2 shift)
+      public void ResolveCollisionOnMoving(Vector2 shift)
       {
-         int repeats = 10;
+         int repeats = 15;
          Vector2 step = shift / repeats;
 
          for (int r = 0; r < repeats; r++)
@@ -380,11 +402,11 @@ namespace shootcraft.src
             Vector2 nextPos = hull.center + step;
             Rectangle newHull = new Rectangle(nextPos, width, height);
 
-            var surround_blocks = GetSurroundBlocks(chunkHandler);
+            UpdateSurroundingBlocks();
 
-            foreach (var block in surround_blocks)
+            foreach (var block in surroundingBlocks)
             {
-               if (block.GetType() != typeof(AirBlock) && newHull.Intersect(block.GetRectangle()))
+               if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) && newHull.Intersect(block.GetRectangle()))
                   return;
             }
 
@@ -392,9 +414,9 @@ namespace shootcraft.src
          }
       }
 
-      public void ResolveCollisionPrediction(ChunkHandler chunkHandler, float ellapsed)
+      public void ResolveCollisionPrediction(float ellapsed)
       {
-         int repeats = 10;
+         int repeats = 15;
          float iter_duration = ellapsed / repeats;
 
          bool doIntersect = false;
@@ -404,12 +426,11 @@ namespace shootcraft.src
             Vector2 nextPos = hull.center + vel * iter_duration + acc * iter_duration * iter_duration / 2;
             Rectangle newHull = new Rectangle(nextPos, width, height);
 
-            var surround_blocks = GetSurroundBlocks(chunkHandler);
+            UpdateSurroundingBlocks();
 
-
-            foreach (var block in surround_blocks)
+            foreach (var block in surroundingBlocks)
             {
-               if (block.GetType() != typeof(AirBlock) && newHull.Intersect(block.GetRectangle()))
+               if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) && newHull.Intersect(block.GetRectangle()))
                {
                   doIntersect = true;
                   break;
@@ -453,24 +474,42 @@ namespace shootcraft.src
          GL.End();
       }
 
-      public void GoLeft(ChunkHandler chunkHandler)
+      public void DrawCursor()
       {
-         ResolveCollisionOnMoving(chunkHandler, new Vector2(-speed, 0.0f));
+         //if (Vector2.DistanceSquared(cursor.pos, pos) < 10000)
+         cursor.Draw();
       }
 
-      public void GoRight(ChunkHandler chunkHandler)
+      public Block GetBlockUnderCursor()
       {
-         ResolveCollisionOnMoving(chunkHandler, new Vector2(speed, 0.0f));
+         Vector2 cursPos = cursor.pos;
+         cursPos -= pos;
+         cursPos = cursPos.Limit(accessRadius);
+         cursPos += pos;
+
+         var cursorBlock = World.GetBlock(cursPos);
+
+         return cursorBlock;
       }
 
-      public void GoUp(ChunkHandler chunkHandler)
+      public void GoLeft()
       {
-         ResolveCollisionOnMoving(chunkHandler, new Vector2(0.0f, speed));
+         ResolveCollisionOnMoving(new Vector2(-speed, 0.0f));
       }
 
-      public void GoDown(ChunkHandler chunkHandler)
+      public void GoRight()
       {
-         ResolveCollisionOnMoving(chunkHandler, new Vector2(0.0f, -speed));
+         ResolveCollisionOnMoving(new Vector2(speed, 0.0f));
+      }
+
+      public void GoUp()
+      {
+         ResolveCollisionOnMoving(new Vector2(0.0f, speed));
+      }
+
+      public void GoDown()
+      {
+         ResolveCollisionOnMoving(new Vector2(0.0f, -speed));
       }
 
       public void Jump()
