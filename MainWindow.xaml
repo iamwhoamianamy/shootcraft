@@ -17,7 +17,8 @@
                               MouseMove="glControl_MouseMove"
                               MouseClick="glControl_MouseClick"
                               KeyDown="glControl_KeyDown"
-                              KeyPress="glControl_KeyPress"/>
+                              KeyPress="glControl_KeyPress"
+                              MouseWheel="glControl_MouseWheel"/>
         </WindowsFormsHost>
     </Grid>
 </Window>

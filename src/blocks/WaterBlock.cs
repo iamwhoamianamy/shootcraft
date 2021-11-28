@@ -9,8 +9,8 @@ namespace shootcraft.src.blocks
 {
    public class WaterBlock : Block
    {
-
+      public static float viscosity = 0.96f;
       public WaterBlock() : base() { }
-      public WaterBlock(Vector2 pos) : base(pos, OpenTK.Graphics.Color4.Aqua) { }
+      public WaterBlock(Vector2 pos) : base(pos) { }
    }
 }

@@ -6,56 +6,54 @@ using System.Threading.Tasks;
 
 namespace shootcraft.src
 {
-   class NoiseGenerator
+   public class NoiseGenerator
    {
-      public int nOutputSize = 10000;
-      public List<double> fNoiseSeed1D;
-      public List<int> fPerlinNoise1D;
+      public int length = 10000;
+      public List<int> perlinNoise;
 
       int nOctaveCount = 9;
-      double fScalingBias = 0.05f;
+      double fScalingBias = 0.05;
 
       public NoiseGenerator()
       {
-         fNoiseSeed1D = new List<double>();
-         fPerlinNoise1D = new List<int>();
-         NoiseSeed();
-         PerlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fScalingBias, fPerlinNoise1D);
-         for (int i = 0; i < nOutputSize; i++)
-            Console.WriteLine(fPerlinNoise1D[i].ToString());
-      }
-
-      public void NoiseSeed()
-      {
+         List<double> noiseSeed;
+         noiseSeed = new List<double>();
+         perlinNoise = new List<int>();
          Random rand = new Random();
-         for (int i = 0; i < nOutputSize; i++)
-            fNoiseSeed1D.Add(rand.NextDouble());
+
+         for (int i = 0; i < length; i++)
+            noiseSeed.Add(rand.NextDouble());
+
+         PerlinNoise1D(noiseSeed, nOctaveCount, fScalingBias);
+
+         for (int i = 0; i < length; i++)
+            Console.WriteLine(perlinNoise[i].ToString());
       }
 
-      public void PerlinNoise1D(int nCount, List<double> fSeed, int nOctaves, double fBias, List<int> fOutput)
+      private void PerlinNoise1D(List<double> noiseSeed, int octavesCount, double bias)
       {
-         for (int x = 0; x < nCount; x++)
+         for (int x = 0; x < length; x++)
          {
-            double fNoise = 0.0f;
-            double fScaleAcc = 0.0f;
-            double fScale = 1.0f;
+            double noise = 0.0;
+            double scaleAcc = 0.0;
+            double scale = 1.0;
 
-            for (int o = 0; o < nOctaves; o++)
+            for (int o = 0; o < octavesCount; o++)
             {
-               int nPitch = nCount >> o;
-               int nSample1 = (x / nPitch) * nPitch;
-               int nSample2 = (nSample1 + nPitch) % nCount;
+               int pitch = length >> o;
+               int sample1 = (x / pitch) * pitch;
+               int sample2 = (sample1 + pitch) % length;
 
-               double fBlend = (double)(x - nSample1) / (double)nPitch;
+               double blend = (double)(x - sample1) / (double)pitch;
 
-               double fSample = (1.0f - fBlend) * fSeed[nSample1] + fBlend * fSeed[nSample2];
+               double sample = (1.0 - blend) * noiseSeed[sample1] + blend * noiseSeed[sample2];
 
-               fScaleAcc += fScale;
-               fNoise += fSample * fScale;
-               fScale = fScale / fBias;
+               scaleAcc += scale;
+               noise += sample * scale;
+               scale = scale / bias;
             }
 
-            fOutput.Add((int)((fNoise / fScaleAcc) * 15));
+            perlinNoise.Add((int)((noise / scaleAcc) * 15) + 10);
          }
       }
 

@@ -33,28 +33,52 @@ namespace shootcraft
 
       private void glControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         player.cursor.pos.X = e.X - translation.X;
-         player.cursor.pos.Y = glControl.Height - e.Y - translation.Y;
+         float x = e.X;
+         x /= globalScaling;
 
+         x -= screenCenterGame.X;
+         x /= scale;
+         x += screenCenterGame.X;
+
+         x -= translation.X;
+         player.cursor.pos.X = x;
+
+         float y = glControl.Height - e.Y;
+         y /= globalScaling;
+
+         y -= screenCenterGame.Y;
+         y /= scale;
+         y += screenCenterGame.Y;
+
+         y -= translation.Y;
+         player.cursor.pos.Y = y;
       }
 
       private void glControl_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         Vector2 block_pos = player.cursor.pos;
+         //Vector2 block_pos = player.cursor.pos;
+         Vector2 cursor = player.GetBlockUnderCursor().pos;
 
-         if (e.Button == System.Windows.Forms.MouseButtons.Left)
+         switch(e.Button)
          {
-            Block cursor_block = chunkHandler.GetBlock(block_pos);
-            chunkHandler.SetBlock(block_pos, new AirBlock(cursor_block.pos));
-         }
-         else
-         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            case System.Windows.Forms.MouseButtons.Left:
             {
-               Block cursor_block = chunkHandler.GetBlock(block_pos);
-               chunkHandler.SetBlock(block_pos, new DirtBlock(cursor_block.pos));
+               World.SetBlock(cursor, new AirBlock(cursor));
+
+               break;
+            }
+            case System.Windows.Forms.MouseButtons.Right:
+            {
+               World.SetBlock(cursor, new DirtBlock(cursor));
+
+               break;
             }
          }
+      }
+      private void glControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+      {
+         const float scalingFactor = 1.1f;
+         scale *= e.Delta > 0 ? scalingFactor : 1 / scalingFactor;
       }
 
       private void ControllPlayer()
@@ -66,26 +90,26 @@ namespace shootcraft
 
          if (Keyboard.GetState().IsKeyDown(Key.A))
          {
-            player.GoLeft(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoLeft();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
          else
             if (Keyboard.GetState().IsKeyDown(Key.D))
          {
-            player.GoRight(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoRight();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
 
          if (Keyboard.GetState().IsKeyDown(Key.S))
          {
-            player.GoDown(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoDown();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
          else
             if (Keyboard.GetState().IsKeyDown(Key.W))
          {
-            player.GoUp(chunkHandler);
-            //player.ResolveCollisionSAT(chunkHandler, ellapsed);
+            player.GoUp();
+            //player.ResolveCollisionSAT(World, ellapsed);
          }
       }
 
@@ -126,6 +150,8 @@ namespace shootcraft
       {
 
       }
+
+
 
    }
 }
