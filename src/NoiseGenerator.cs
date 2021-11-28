@@ -52,7 +52,7 @@ namespace shootcraft.src
                noise += sample * scale;
                scale = scale / bias;
             }
-
+           
             perlinNoise.Add((int)((noise / scaleAcc) * 15) + 10);
          }
       }

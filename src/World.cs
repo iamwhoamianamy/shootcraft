@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using OpenTK;
 using shootcraft.src.structures;
 
-
 namespace shootcraft.src
 {
    public static class World
@@ -57,7 +56,6 @@ namespace shootcraft.src
                   }
                }
             }
-
             Logger.Log($"Created chunk {chunkId}");
 
             return chunk;
