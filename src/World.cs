@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 using OpenTK;
 using shootcraft.src.structures;
+
+using Newtonsoft.Json;
 
 namespace shootcraft.src
 {
    public static class World
    {
       private static Dictionary<int, Chunk> chunks;
-      private static NoiseGenerator noiseGenerator;
+      public static NoiseGenerator noiseGenerator;
 
       public static void Init()
       {
@@ -25,6 +28,14 @@ namespace shootcraft.src
       //   if(!chunks.ContainsKey(chunk.BegPos))
       //      chunks.Add(chunk.BegPos, chunk);
       //}
+
+      public static void RestoreChunks()
+      {
+         foreach (KeyValuePair<int, Chunk> kvp in chunks)
+         {
+            kvp.Value.RestoreBlocks(kvp.Key);
+         }
+      }
 
       public static int PosToChunkId(Vector2 pos)
       {
@@ -40,7 +51,7 @@ namespace shootcraft.src
       {
          if (!chunks.ContainsKey(chunkId))
          {
-            Chunk chunk = new Chunk(chunkId, noiseGenerator);
+            Chunk chunk = new Chunk(chunkId);
             chunks.Add(chunkId, chunk);
 
             if (noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && noiseGenerator.perlinNoise[noiseGenerator.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
@@ -83,6 +94,30 @@ namespace shootcraft.src
             Chunk chunk = GetChunk(i);
             chunk.DrawAllBlocks();
          }
+      }
+
+      public static void SaveToJson(string name)
+      {
+         string jsonString;
+         var settings = new JsonSerializerSettings();
+         settings.TypeNameHandling = TypeNameHandling.Objects;
+         jsonString = JsonConvert.SerializeObject(chunks, Formatting.Indented, settings);
+         File.WriteAllText(SavesHandler.path + name + "/worlddata.json", jsonString);
+         jsonString = JsonConvert.SerializeObject(noiseGenerator, Formatting.Indented, settings);
+         File.WriteAllText(SavesHandler.path + name + "/noisedata.json", jsonString);
+      }
+
+      public static void RestoreWorldFromJson(string name)
+      {
+         string jsonString;
+         var settings = new JsonSerializerSettings();
+         //settings.Converters.Add(new BlockConverter());
+         settings.TypeNameHandling = TypeNameHandling.Objects;
+         jsonString = File.ReadAllText(SavesHandler.path + name + "/noisedata.json");
+         noiseGenerator = JsonConvert.DeserializeObject<NoiseGenerator>(jsonString, settings);
+         jsonString = File.ReadAllText(SavesHandler.path + name + "/worlddata.json");
+         chunks = JsonConvert.DeserializeObject<Dictionary<int, Chunk>>(jsonString, settings);
+         RestoreChunks();
       }
    }
 }

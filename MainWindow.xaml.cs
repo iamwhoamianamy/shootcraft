@@ -68,17 +68,18 @@ namespace shootcraft
 
          scale = 1.0f;
 
-
-         if(true)
+         World.Init();
+         if (false)
          {
-            chunkHandler = new ChunkHandler();
-            player = new Player(screenCenter);
+            player = new Player(new Vector2(0, 40.0f));
          }
          else
          {
-            chunkHandler = SavesHandler.RestoreWorldFromJson("world1");
+            World.RestoreWorldFromJson("world1");
             player = SavesHandler.RestorePlayerFromJson("world1");
          }
+
+
 
 
          timer = new Timer(1.0 / fps * 1000);
@@ -178,7 +179,8 @@ namespace shootcraft
       private void Window_Closed(object sender, EventArgs e)
       {
          Logger.Close();
-         SavesHandler.SaveToJson(chunkHandler, player, "world1");
+         World.SaveToJson("world1");
+         SavesHandler.SaveToJson(player, "world1");
       }
    }
 }
