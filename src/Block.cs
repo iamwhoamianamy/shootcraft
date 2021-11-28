@@ -9,8 +9,11 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
+using Newtonsoft.Json;
+
 namespace shootcraft.src
 {
+   [JsonObject(MemberSerialization.OptIn)]
    public class Block : IBlockRegisterable
    {
       public Vector2 pos;

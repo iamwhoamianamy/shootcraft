@@ -4,11 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+using Newtonsoft.Json;
+
 namespace shootcraft.src
 {
+   [JsonObject(MemberSerialization.OptIn)]
    public class NoiseGenerator
    {
       public int length = 10000;
+      [JsonProperty]
       public List<int> perlinNoise;
 
       int nOctaveCount = 9;
@@ -26,8 +31,6 @@ namespace shootcraft.src
 
          PerlinNoise1D(noiseSeed, nOctaveCount, fScalingBias);
 
-         for (int i = 0; i < length; i++)
-            Console.WriteLine(perlinNoise[i].ToString());
       }
 
       private void PerlinNoise1D(List<double> noiseSeed, int octavesCount, double bias)

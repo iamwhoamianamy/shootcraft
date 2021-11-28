@@ -9,23 +9,28 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
+using Newtonsoft.Json;
+
 namespace shootcraft.src
 {
+   [JsonObject(MemberSerialization.OptIn)]
    public class Chunk
    {
+      [JsonProperty]
       private Block[][] _blocks;
-
+      [JsonProperty]
       public int Index { get; private set; }
       public int PerlinSurface { get; private set; }
+      [JsonProperty]
       public int StartX { get; private set; }
 
       public static int blockCountX = 8;
       public static int blockCountY = 60;
 
-      public Chunk(int index, NoiseGenerator perlinNoise)
+      public Chunk(int index)
       {
          InitChunk(index);
-         ParamChunk(perlinNoise);
+         ParamChunk(World.noiseGenerator);
       }
 
       public void InitChunk(int index)
@@ -55,11 +60,50 @@ namespace shootcraft.src
                }
                else
                   _blocks[i][j] = new AirBlock(block_pos);
- 
+
             }
          }
       }
 
+      public void RestoreBlocks(int index)
+      {
+         Index = index;
+         StartX = index * Chunk.blockCountX;
+
+         for (int i = 0; i < blockCountY; i++)
+         {
+            for (int j = 0; j < blockCountX; j++)
+            {
+               Vector2 block_pos = new Vector2(StartX + j + 0.5f, i + 0.5f);
+
+
+               switch (_blocks[i][j].GetType().ToString())
+               {
+                  case "shootcraft.src.blocks.DirtBlock":
+                     _blocks[i][j] = new DirtBlock(block_pos);
+                     break;
+                  case "shootcraft.src.blocks.AirBlock":
+                     _blocks[i][j] = new AirBlock(block_pos);
+                     break;
+                  case "shootcraft.src.blocks.LeavesBlock":
+                     _blocks[i][j] = new LeavesBlock(block_pos);
+                     break;
+                  case "shootcraft.src.blocks.SandBlock":
+                     _blocks[i][j] = new SandBlock(block_pos);
+                     break;
+                  case "shootcraft.src.blocks.WaterBlock":
+                     _blocks[i][j] = new WaterBlock(block_pos);
+                     break;
+                  case "shootcraft.src.blocks.WoodBlock":
+                     _blocks[i][j] = new WoodBlock(block_pos);
+                     break;
+                  default:
+                     _blocks[i][j] = new Block();
+                     break;
+               }
+            }
+         }
+      }
 
       public void DrawBorders()
       {

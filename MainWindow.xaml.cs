@@ -69,7 +69,18 @@ namespace shootcraft
          scale = 1.0f;
 
          World.Init();
-         player = new Player(new Vector2(0, 40.0f));
+         if (false)
+         {
+            player = new Player(new Vector2(0, 40.0f));
+         }
+         else
+         {
+            World.RestoreWorldFromJson("world1");
+            player = SavesHandler.RestorePlayerFromJson("world1");
+         }
+
+
+
 
          timer = new Timer(1.0 / fps * 1000);
          timer.Elapsed += Timer_Elapsed;
@@ -168,6 +179,8 @@ namespace shootcraft
       private void Window_Closed(object sender, EventArgs e)
       {
          Logger.Close();
+         World.SaveToJson("world1");
+         SavesHandler.SaveToJson(player, "world1");
       }
    }
 }
