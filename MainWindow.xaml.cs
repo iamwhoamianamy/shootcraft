@@ -68,10 +68,9 @@ namespace shootcraft
 
          scale = 1.0f;
 
-         World.Init();
-
          if (false)
          {
+            World.Init();
             player = new Player(new Vector2(0, 40.0f));
          }
          else

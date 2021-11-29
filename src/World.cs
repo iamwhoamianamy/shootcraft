@@ -20,7 +20,7 @@ namespace shootcraft.src
       public static void Init()
       {
          chunks = new Dictionary<int, Chunk>();
-         perlinNoise = new PerlinNoise();
+         perlinNoise = new PerlinNoise(10000);
       }
 
       public static void RestoreChunks()
@@ -43,7 +43,7 @@ namespace shootcraft.src
 
       public static int PerlinValueForX(float x)
       {
-         return perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(x)];
+         return perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(x)];
       }
 
 
@@ -54,9 +54,9 @@ namespace shootcraft.src
             Chunk chunk = new Chunk(chunkId);
             chunks.Add(chunkId, chunk);
 
-            if (perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
+            if (perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
             {
-               Tree tree = Tree.SmallTree(new Vector2(chunk.StartX + 4.0f, perlinNoise.values[perlinNoise.length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
+               Tree tree = Tree.SmallTree(new Vector2(chunk.StartX + 4.0f, perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
 
                for (int i = 0; i < tree.Height; i++)
                {

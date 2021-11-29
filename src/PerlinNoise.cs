@@ -12,15 +12,17 @@ namespace shootcraft.src
    [JsonObject(MemberSerialization.OptIn)]
    public class PerlinNoise
    {
-      public int length = 10000;
-
       [JsonProperty]
       public List<int> values;
+
+      public int Length => values.Count;
 
       int octaveCount = 9;
       double scalingBias = 0.05;
 
-      public PerlinNoise()
+      public PerlinNoise() { }
+
+      public PerlinNoise(int length)
       {
          List<double> noiseSeed;
          noiseSeed = new List<double>();
@@ -31,12 +33,11 @@ namespace shootcraft.src
             noiseSeed.Add(rand.NextDouble());
 
          PerlinNoise1D(noiseSeed, octaveCount, scalingBias);
-
       }
 
       private void PerlinNoise1D(List<double> noiseSeed, int octavesCount, double bias)
       {
-         for (int x = 0; x < length; x++)
+         for (int x = 0; x < noiseSeed.Count; x++)
          {
             double noise = 0.0;
             double scaleAcc = 0.0;
@@ -44,9 +45,9 @@ namespace shootcraft.src
 
             for (int o = 0; o < octavesCount; o++)
             {
-               int pitch = length >> o;
+               int pitch = noiseSeed.Count >> o;
                int sample1 = (x / pitch) * pitch;
-               int sample2 = (sample1 + pitch) % length;
+               int sample2 = (sample1 + pitch) % noiseSeed.Count;
 
                double blend = (double)(x - sample1) / (double)pitch;
 
