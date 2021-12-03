@@ -46,7 +46,7 @@ namespace shootcraft.src
                int sample1 = x / pitch * pitch;
                int sample2 = (sample1 + pitch) % noiseSeed.Count;
 
-               double blend = (x - sample1) / pitch;
+               double blend = (double)(x - sample1) / pitch;
 
                double sample = (1.0 - blend) * noiseSeed[sample1] + blend * noiseSeed[sample2];
 
