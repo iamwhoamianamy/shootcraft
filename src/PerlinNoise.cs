@@ -17,12 +17,9 @@ namespace shootcraft.src
 
       public int Length => values.Count;
 
-      int octaveCount = 9;
-      double scalingBias = 0.05;
-
       public PerlinNoise() { }
 
-      public PerlinNoise(int length)
+      public PerlinNoise(int length, int octavesCount = 9, double bias = 0.05)
       {
          List<double> noiseSeed;
          noiseSeed = new List<double>();
@@ -32,7 +29,7 @@ namespace shootcraft.src
          for (int i = 0; i < length; i++)
             noiseSeed.Add(rand.NextDouble());
 
-         PerlinNoise1D(noiseSeed, octaveCount, scalingBias);
+         PerlinNoise1D(noiseSeed, octavesCount, bias);
       }
 
       private void PerlinNoise1D(List<double> noiseSeed, int octavesCount, double bias)
@@ -46,19 +43,19 @@ namespace shootcraft.src
             for (int o = 0; o < octavesCount; o++)
             {
                int pitch = noiseSeed.Count >> o;
-               int sample1 = (x / pitch) * pitch;
+               int sample1 = x / pitch * pitch;
                int sample2 = (sample1 + pitch) % noiseSeed.Count;
 
-               double blend = (double)(x - sample1) / (double)pitch;
+               double blend = (x - sample1) / pitch;
 
                double sample = (1.0 - blend) * noiseSeed[sample1] + blend * noiseSeed[sample2];
 
                scaleAcc += scale;
                noise += sample * scale;
-               scale = scale / bias;
+               scale /= bias;
             }
            
-            values.Add((int)((noise / scaleAcc) * 15) + 10);
+            values.Add((int)(noise / scaleAcc * 15) + 10);
          }
       }
 
