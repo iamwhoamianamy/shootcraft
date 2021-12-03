@@ -34,11 +34,11 @@ namespace shootcraft.src
       [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
       private Vector2 acc;
 
-      public static float height = 2.0f;
+      public static float height = 1.75f;
       public static float width = 0.5f;
       public float speed = 0.6f;
       public float runningSpeed = 7.5f;
-      public float jumpMomentum = 8.5f;
+      public float jumpMomentum = 4.0f;
       public float accessRadius = 7.5f;
 
       public Cursor cursor;
@@ -87,14 +87,21 @@ namespace shootcraft.src
       {
          List<Block> blocks = new List<Block>();
 
+         blocks.Add(World.GetBlock(pos, 0, -0));
          blocks.Add(World.GetBlock(pos, 0, -1));
          blocks.Add(World.GetBlock(pos, 0, -2));
+         blocks.Add(World.GetBlock(pos, 0, -3));
 
          foreach (var block in blocks)
          {
+            float d = Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f));
+
             if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) &&
-             Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f)) < 1e-2)
+             d < 1e-1)
+            {
                IsStanding = true;
+               return;
+            }
             else
                IsStanding = false;
          }
@@ -395,7 +402,7 @@ namespace shootcraft.src
 
       public void ResolveCollisionOnMoving(Vector2 shift)
       {
-         int repeats = 30;
+         int repeats = 60;
          Vector2 step = shift / repeats;
 
          for (int r = 0; r < repeats; r++)
@@ -417,7 +424,7 @@ namespace shootcraft.src
 
       public void ResolveCollisionPrediction(float ellapsed)
       {
-         int repeats = 50;
+         int repeats = 100;
          float iter_duration = ellapsed / repeats;
 
          bool doIntersect = false;

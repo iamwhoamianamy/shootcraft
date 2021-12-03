@@ -47,8 +47,10 @@ namespace shootcraft.src
       {
          Rectangle rect = GetRectangle();
 
+         //GL.Enable(EnableCap.PolygonSmooth);
+
          GL.BindTexture(TextureTarget.Texture2D,
-            TexturesHandler.blockTextures[this.GetType()]);
+            TexturesHandler.blockTextures[GetType()]);
 
          GL.Enable(EnableCap.Texture2D);
          GL.Begin(PrimitiveType.Quads);
