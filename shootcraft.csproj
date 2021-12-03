@@ -16,6 +16,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,6 +103,7 @@
     <Compile Include="src\blocks\GrassBlock.cs" />
     <Compile Include="src\blocks\LeavesBlock.cs" />
     <Compile Include="src\blocks\SandBlock.cs" />
+    <Compile Include="src\blocks\StoneBlock.cs" />
     <Compile Include="src\blocks\WaterBlock.cs" />
     <Compile Include="src\blocks\WoodBlock.cs" />
     <Compile Include="src\ClassesHandler.cs" />

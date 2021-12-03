@@ -17,7 +17,7 @@ namespace shootcraft.src
    public class Chunk
    {
       [JsonProperty]
-      private Block[][] _blocks;
+      private Block[][] blocks;
 
       [JsonProperty]
       public int Index { get; private set; }
@@ -30,60 +30,90 @@ namespace shootcraft.src
       public Chunk(int index)
       {
          InitChunk(index);
-         ParamChunk(World.perlinNoise);
+         GenerateBasicTerrain();
+         SpawnSand();
+         SpawnGrass();
       }
 
       public void InitChunk(int index)
       {
          Index = index;
          StartX = index * blockCountX;
-         _blocks = new Block[blockCountY][];
+         blocks = new Block[blockCountY][];
+
          for (int i = 0; i < blockCountY; i++)
-            _blocks[i] = new Block[blockCountX];
+            blocks[i] = new Block[blockCountX];
       }
 
-      public void ParamChunk(PerlinNoise perlinNoise)
+      public void GenerateBasicTerrain()
       {
          for (int i = 0; i < blockCountY; i++)
          {
             for (int j = 0; j < blockCountX; j++)
             {
                Vector2 blockPos = new Vector2(StartX + j + 0.5f, i + 0.5f);
-               int PerlinSurface = World.PerlinValueForX(blockPos.X);
+               int perlinSurface = World.PerlinValueForX(blockPos.X);
 
-               if (blockPos.Y < PerlinSurface)
+               if (blockPos.Y < perlinSurface - 4.0f)
                {
-                  _blocks[i][j] = new DirtBlock(blockPos);
+                  blocks[i][j] = new StoneBlock(blockPos);
                }
-               else if ((int)(blockPos.Y) < 16)
+               else if (blockPos.Y < perlinSurface)
                {
-                  _blocks[i][j] = new WaterBlock(blockPos);
-
-                  for (int y = -1; y < 1; y++)
-                  {
-                     for (int x = -2; x < 4; x++)
-                     {
-                        int xIdx = j + x;
-                        int yIdx = i + y;
-
-                        if (xIdx >= 0 && xIdx < blockCountX &&
-                            yIdx >= 0 && yIdx < blockCountY &&
-                           _blocks[yIdx][xIdx]?.GetType() == typeof(DirtBlock))
-                           _blocks[yIdx][xIdx] = new SandBlock(_blocks[i + y][j + x].pos);
-                     }
-                  }
+                  blocks[i][j] = new DirtBlock(blockPos);
+               }
+               else if ((int)blockPos.Y < World.waterLevel)
+               {
+                  blocks[i][j] = new WaterBlock(blockPos);
                }
                else
-                  _blocks[i][j] = new AirBlock(blockPos);
+                  blocks[i][j] = new AirBlock(blockPos);
             }
          }
+      }
 
+      private void SpawnGrass()
+      {
          for (int x = 0; x < blockCountX; x++)
          {
             int perlinValue = World.PerlinValueForX(StartX + x) - 1;
 
-            if(_blocks[perlinValue][x] is DirtBlock)
-               _blocks[perlinValue][x] = new GrassBlock(_blocks[perlinValue][x].pos);
+            if (blocks[perlinValue][x] is DirtBlock)
+               SetBlock(new GrassBlock(blocks[perlinValue][x].pos));
+         }
+      }
+      
+      private Vector2 BlockPosFromPlace(int x, int y)
+      {
+         return new Vector2(StartX + x + 0.5f, y + 0.5f);
+      }
+
+      private void SpawnSand()
+      {
+         int w = World.sandLayerWidth;
+         int h = World.sandLayerHeight;
+
+         for (int cy = 0; cy < blockCountY; cy++)
+         {
+            for (int cx = 0; cx < blockCountX; cx++)
+            {
+               for (int ty = cy - h / 2; ty < cy + h / 2 + 1; ty++)
+               {
+                  for (int tx = cx - w / 2; tx < cx + w / 2 + 1; tx++)
+                  {
+                     int perlinValue = World.PerlinValueForX(StartX + tx);
+
+                     if (perlinValue < ty && perlinValue < World.waterLevel)
+                     {
+                        Block block = GetBlock(cx, cy);
+                        float d = Vector2.DistanceSquared(new Vector2(tx, ty), new Vector2(cx, cy));
+
+                        if (!(block is null) && block is DirtBlock && d * d < w * w + h * h)
+                           SetBlock(new SandBlock(new Vector2(StartX + cx + 0.5f, cy + 0.5f)));
+                     }
+                  }
+               }
+            }
          }
       }
 
@@ -92,11 +122,11 @@ namespace shootcraft.src
          Index = index;
          StartX = index * blockCountX;
 
-         for (int i = 0; i < blockCountY; i++)
+         for (int y = 0; y < blockCountY; y++)
          {
-            for (int j = 0; j < blockCountX; j++)
+            for (int x = 0; x < blockCountX; x++)
             {
-               _blocks[i][j].pos = new Vector2(StartX + j + 0.5f, i + 0.5f);
+               blocks[y][x].pos = BlockPosFromPlace(x, y);
             }
          }
       }
@@ -115,7 +145,7 @@ namespace shootcraft.src
          GL.End();
       }
 
-      public bool ContainsBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
+      public bool DoContainBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
       {
          int block_x_id = (int)(pos.X) - Index * blockCountX + offsetX;
          int block_y_id = (int)Math.Min(blockCountY - 1, Math.Max(pos.Y, 0)) + offsetY;
@@ -127,22 +157,33 @@ namespace shootcraft.src
             return false;
       }
 
-      public void SetBlock(Vector2 pos, Block block, int offsetX = 0, int offsetY = 0)
+      public void SetBlock(Block block)
       {
-         int block_x_id = (int)Math.Floor(pos.X) - Index * blockCountX + offsetX;
-         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y, 0))) + offsetY;
-
-            _blocks[block_y_id][block_x_id] = block;
+         if (block.pos.X - StartX >= 0 && block.pos.X - StartX < blockCountX &&
+             block.pos.Y >= 0 && block.pos.Y < blockCountY)
+            blocks[(int)block.pos.Y][(int)(block.pos.X - StartX)] = block;
       }
 
       public Block GetBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
       {
-         int block_x_id = (int)Math.Floor(pos.X) - Index * blockCountX + offsetX;
-         int block_y_id = (int)Math.Floor(Math.Min(blockCountY - 1, Math.Max(pos.Y, 0))) + offsetY;
+         return GetBlock(pos + new Vector2(offsetX, offsetY));
+      }
 
-         block_y_id = Math.Min(Math.Max(0, block_y_id), blockCountY - 1);
+      public Block GetBlock(Vector2 pos)
+      {
+         int x = (int)Math.Floor(pos.X) - Index * blockCountX;
+         int y = (int)Math.Floor(pos.Y);
 
-         return _blocks[block_y_id][block_x_id];
+         return GetBlock(x, y);
+      }
+
+      public Block GetBlock(int x, int y)
+      {
+         if (x < 0 || x >= blockCountX ||
+             y < 0 || y >= blockCountY)
+            return null;
+
+         return blocks[y][x];
       }
 
       public void DrawAllBlocks()
@@ -154,8 +195,7 @@ namespace shootcraft.src
             for (int j = 0; j < blockCountX; j++)
             {
                //_blocks[i][j].DrawColor();
-               _blocks[i][j].DrawTexture();
-
+               blocks[i][j].DrawTexture();
             }
          }
       }

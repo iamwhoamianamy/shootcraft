@@ -17,10 +17,17 @@ namespace shootcraft.src
       private static Dictionary<int, Chunk> chunks;
       public static PerlinNoise perlinNoise;
 
+      public static int sandLayerWidth = 8;
+      public static int sandLayerHeight = 6;
+
+      public static int waterLevel = 16;
+
+      public static float GForce = 4.5f;
+
       public static void Init()
       {
          chunks = new Dictionary<int, Chunk>();
-         perlinNoise = new PerlinNoise(10000);
+         perlinNoise = new PerlinNoise(10000, 10, 9, 0.00001);
       }
 
       public static void RestoreChunks()
@@ -63,7 +70,7 @@ namespace shootcraft.src
                   for (int j = 0; j < tree.Width; j++)
                   {
                      if (tree.blocks[i][j] != null)
-                        SetBlock(tree.blocks[i][j].pos, tree.blocks[i][j]);
+                        SetBlock(tree.blocks[i][j]);
                   }
                }
             }
@@ -80,9 +87,9 @@ namespace shootcraft.src
          return GetChunk(pos, offsetX).GetBlock(pos, offsetX, offsetY);
       }
 
-      public static void SetBlock(Vector2 pos, Block block, int offsetX = 0, int offsetY = 0)
+      public static void SetBlock(Block block)
       {
-         GetChunk(pos, offsetX).SetBlock(pos, block, offsetX, offsetY);
+         GetChunk(block.pos).SetBlock(block);
       }
 
       public static void DrawVisibleChunks(Vector2 pos, int fow)

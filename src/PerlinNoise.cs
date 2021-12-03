@@ -15,32 +15,40 @@ namespace shootcraft.src
       [JsonProperty]
       public List<int> values;
 
-      public int Length => values.Count;
+      public int Length { get; private set; }
+      public double Shift { get; private set; }
+      public int OctavesCount { get; private set; }
+      public double Bias { get; private set; }
 
       public PerlinNoise() { }
 
-      public PerlinNoise(int length, int octavesCount = 9, double bias = 0.05)
+      public PerlinNoise(int length, double shift, int octavesCount, double bias)
       {
-         List<double> noiseSeed;
-         noiseSeed = new List<double>();
          values = new List<int>();
-         Random rand = new Random();
+         Shift = shift;
+         OctavesCount = octavesCount;
+         Bias = bias;
+         Length = length;
 
-         for (int i = 0; i < length; i++)
-            noiseSeed.Add(rand.NextDouble());
-
-         PerlinNoise1D(noiseSeed, octavesCount, bias);
+         GenerateNoise();
       }
 
-      private void PerlinNoise1D(List<double> noiseSeed, int octavesCount, double bias)
+      private void GenerateNoise()
       {
+         List<double> noiseSeed = new List<double>();
+
+         Random rand = new Random();
+
+         for (int i = 0; i < Length; i++)
+            noiseSeed.Add(rand.NextDouble());
+
          for (int x = 0; x < noiseSeed.Count; x++)
          {
             double noise = 0.0;
             double scaleAcc = 0.0;
             double scale = 1.0;
 
-            for (int o = 0; o < octavesCount; o++)
+            for (int o = 0; o < OctavesCount; o++)
             {
                int pitch = noiseSeed.Count >> o;
                int sample1 = x / pitch * pitch;
@@ -52,10 +60,10 @@ namespace shootcraft.src
 
                scaleAcc += scale;
                noise += sample * scale;
-               scale /= bias;
+               scale /= Bias;
             }
            
-            values.Add((int)(noise / scaleAcc * 15) + 10);
+            values.Add((int)(noise / scaleAcc * 15) + (int)Shift);
          }
       }
 

@@ -37,11 +37,9 @@ namespace shootcraft
       private Player player;
       private Vector2 screenCenterWindow;
       private Vector2 screenCenterGame;
-      private float GForce = 1.2f;
       private Vector2 translation;
       private float scale;
       private int currentChunk = 0;
-      private int currentBlock = 0;
       private float globalScaling = 20.0f;
 
       public MainWindow()
@@ -68,7 +66,7 @@ namespace shootcraft
 
          scale = 1.0f;
 
-         if (false)
+         if (true)
          {
             World.Init();
             player = new Player(new Vector2(0, 40.0f));
@@ -98,7 +96,7 @@ namespace shootcraft
       private void UpdatePhysics()
       {
          if (!player.IsStanding)
-            player.ApplyForce(new Vector2(0.0f, -GForce));
+            player.ApplyForce(new Vector2(0.0f, -World.GForce));
 
          //player.UpdateLocation(ellapsed);
          //player.ResolveCollisionEfremov(chunkHandler, ellapsed);

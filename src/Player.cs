@@ -28,6 +28,7 @@ namespace shootcraft.src
             BuildHull();
          }
       }
+
       [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
       private Vector2 vel;
       [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
@@ -37,7 +38,7 @@ namespace shootcraft.src
       public static float width = 0.5f;
       public float speed = 0.6f;
       public float runningSpeed = 7.5f;
-      public float jumpMomentum = 5.5f;
+      public float jumpMomentum = 8.5f;
       public float accessRadius = 7.5f;
 
       public Cursor cursor;

@@ -63,13 +63,13 @@ namespace shootcraft
          {
             case System.Windows.Forms.MouseButtons.Left:
             {
-               World.SetBlock(cursor, new AirBlock(cursor));
+               World.SetBlock(new AirBlock(cursor));
 
                break;
             }
             case System.Windows.Forms.MouseButtons.Right:
             {
-               World.SetBlock(cursor, new DirtBlock(cursor));
+               World.SetBlock(new DirtBlock(cursor));
 
                break;
             }
