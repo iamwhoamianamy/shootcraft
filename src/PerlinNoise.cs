@@ -15,9 +15,13 @@ namespace shootcraft.src
       [JsonProperty]
       public List<int> values;
 
+      [JsonProperty]
       public int Length { get; private set; }
+      [JsonProperty]
       public double Shift { get; private set; }
+      [JsonProperty]
       public int OctavesCount { get; private set; }
+      [JsonProperty]
       public double Bias { get; private set; }
 
       public PerlinNoise() { }
