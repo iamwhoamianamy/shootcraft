@@ -34,15 +34,15 @@ namespace shootcraft.src
       [JsonProperty(ItemConverterType = typeof(Vector2Converter))]
       private Vector2 acc;
 
-      public static float height = 1.75f;
-      public static float width = 0.5f;
-      public float speed = 0.2f;
-      public float runningSpeed = 0.6f;
-      public float jumpMomentum = 4.0f;
-      public float accessRadius = 7.5f;
+      public const float height = 1.75f;
+      public const float width = 0.5f;
+      public const float walkingSpeed = 0.2f;
+      public const float runningSpeed = 0.6f;
+      public const float jumpMomentum = 4.0f;
+      public const float accessRadius = 7.5f;
       public bool IsRunning { get; set; }
 
-      public float MovingSpeed => IsRunning ? runningSpeed : speed;
+      public float MovingSpeed => IsRunning ? runningSpeed : walkingSpeed;
 
       public Cursor cursor;
       public Rectangle hull;

@@ -96,7 +96,7 @@ namespace shootcraft
       private void UpdatePhysics()
       {
          if (!player.IsStanding)
-            player.ApplyForce(new Vector2(0.0f, -World.GForce));
+            player.ApplyForce(new Vector2(0.0f, -World.gForce));
 
          //player.UpdateLocation(ellapsed);
          //player.ResolveCollisionEfremov(chunkHandler, ellapsed);

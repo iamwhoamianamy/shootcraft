@@ -9,7 +9,7 @@ namespace shootcraft.src.blocks
 {
    public class WaterBlock : Block
    {
-      public static float viscosity = 0.1f;
+      public const float viscosity = 0.1f;
       public WaterBlock() : base() { }
       public WaterBlock(Vector2 pos) : base(pos) { }
    }

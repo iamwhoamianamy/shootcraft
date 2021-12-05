@@ -17,12 +17,12 @@ namespace shootcraft.src
       private static Dictionary<int, Chunk> chunks;
       public static PerlinNoise perlinNoise;
 
-      public static int sandLayerWidth = 8;
-      public static int sandLayerHeight = 6;
+      public const int sandLayerWidth = 8;
+      public const int sandLayerHeight = 6;
 
-      public static int waterLevel = 16;
+      public const int waterLevel = 16;
 
-      public static float GForce = 4.5f;
+      public const float gForce = 4.5f;
 
       public static void Init()
       {

@@ -24,8 +24,8 @@ namespace shootcraft.src
       [JsonProperty]
       public int StartX { get; private set; }
 
-      public static int blockCountX = 8;
-      public static int blockCountY = 60;
+      public const int blockCountX = 8;
+      public const int blockCountY = 60;
 
       public Chunk(int index)
       {
