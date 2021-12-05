@@ -15,6 +15,8 @@ namespace shootcraft.src
 {
    public static class World
    {
+      public static Random RNG { get; private set; }
+
       private static Dictionary<int, Chunk> chunks;
       public static PerlinNoise perlinNoise;
 
@@ -42,6 +44,7 @@ namespace shootcraft.src
          chunks = new Dictionary<int, Chunk>();
          drawableChunks = new Dictionary<int, Chunk>();
          perlinNoise = new PerlinNoise(10000, 10, 9, 0.00001);
+         RNG = new Random();
       }
 
       public static void RestoreChunks()
