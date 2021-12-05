@@ -21,12 +21,7 @@ namespace shootcraft.src.blocks
       public override void Update()
       {
          bool doTransorm = false;
-
          int saturation = 0;
-
-         bool waterAtLeft = false;
-         bool waterAtRight = false;
-         bool waterAtTop = false;
 
          Block lCentB = World.GetBlock(pos, -1, +0);
          Block rCentB = World.GetBlock(pos, +1, +0);
@@ -41,7 +36,6 @@ namespace shootcraft.src.blocks
          {
             doTransorm = true;
             saturation = Math.Max(saturation, (lCentB as WaterBlock).saturation - 1);
-            waterAtLeft = true;
          }
 
          if (!(rCentB is null) && rCentB is WaterBlock &&
@@ -49,19 +43,18 @@ namespace shootcraft.src.blocks
          {
             doTransorm = true;
             saturation = Math.Max(saturation, (rCentB as WaterBlock).saturation - 1);
-            waterAtRight = true;
          }
 
          if(!(cUpppB is null) &&  cUpppB is WaterBlock)
          {
             doTransorm = true;
             saturation = WaterBlock.maxSaturation;
-            waterAtTop = true;
          }
 
          if (doTransorm && saturation > 0)
          {
             WaterBlock waterBlock = new WaterBlock(pos, saturation);
+
             World.SetBlock(waterBlock);
          }
       }

@@ -96,8 +96,15 @@ namespace shootcraft
       private void DrawingTimer_Elapsed(object sender, ElapsedEventArgs e)
       {
          UpdatePhysics();
+         UpdateWorld();
 
-         if(currentTick == 0)
+         glControl.Invalidate();
+         drawingTimer.Start();
+      }
+
+      private void UpdateWorld()
+      {
+         if (currentTick == 0)
          {
             World.SetVisibleChunks(player.pos, 11);
             World.UpdateVisibleChunks();
@@ -107,9 +114,6 @@ namespace shootcraft
 
          if (currentTick == ticksToUpdate)
             currentTick = 0;
-
-         glControl.Invalidate();
-         drawingTimer.Start();
       }
 
       private void WorldUpdatingTimer_Elapsed(object sender, ElapsedEventArgs e)

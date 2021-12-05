@@ -14,14 +14,23 @@ namespace shootcraft.src.blocks
    public class WaterBlock : Block
    {
       public const float viscosity = 0.1f;
-      public const int maxSaturation = 8;
+      public const int maxSaturation = 16;
       public int saturation = maxSaturation;
+
+      public bool isConnectedToSource = true;
+      public bool isSource = true;
 
       public WaterBlock() : base() { }
       public WaterBlock(Vector2 pos) : base(pos) { }
       public WaterBlock(Vector2 pos, int saturation) : base(pos)
       {
          this.saturation = saturation;
+
+         if(saturation < maxSaturation)
+         {
+            isConnectedToSource = false;
+            isSource = false;
+         }
       }
 
       public override void Update()
@@ -30,22 +39,44 @@ namespace shootcraft.src.blocks
          Block rCentB = World.GetBlock(pos, +1, +0);
          Block cUpppB = World.GetBlock(pos, +0, +1);
 
-         if (!(lCentB is null) && lCentB is WaterBlock)
+         if (!(lCentB is null) && lCentB is WaterBlock lwb &&
+              (lwb.isSource || (lwb.isConnectedToSource && saturation < lwb.saturation)) ||
+             !(rCentB is null) && rCentB is WaterBlock rwb &&
+              (rwb.isSource || (rwb.isConnectedToSource && saturation < rwb.saturation)) ||
+             !(cUpppB is null) && cUpppB is WaterBlock uwb &&
+              (uwb.isSource || uwb.isConnectedToSource))
          {
-            saturation = Math.Max((lCentB as WaterBlock).saturation - 1, saturation);
+            isConnectedToSource = true;
+         }
+         else
+         {
+            isConnectedToSource = false;
          }
 
-         if (!(rCentB is null) && rCentB is WaterBlock)
-         {
-            saturation = Math.Max((rCentB as WaterBlock).saturation - 1, saturation);
-         }
+         if(isConnectedToSource)
+         { 
 
-         if (!(cUpppB is null) && cUpppB is WaterBlock)
-         {
-            if(saturation < (cUpppB as WaterBlock).saturation)
+            if (!(lCentB is null) && lCentB is WaterBlock)
             {
-               saturation = (cUpppB as WaterBlock).saturation;
+               saturation = Math.Max((lCentB as WaterBlock).saturation - 1, saturation);
             }
+
+            if (!(rCentB is null) && rCentB is WaterBlock)
+            {
+               saturation = Math.Max((rCentB as WaterBlock).saturation - 1, saturation);
+            }
+
+            if (!(cUpppB is null) && cUpppB is WaterBlock)
+            {
+               if (saturation < (cUpppB as WaterBlock).saturation)
+               {
+                  saturation = (cUpppB as WaterBlock).saturation;
+               }
+            }
+         }
+         else
+         {
+            World.SetBlock(new AirBlock(pos));
          }
       }
 
@@ -65,13 +96,11 @@ namespace shootcraft.src.blocks
 
          float left = pos.X - 0.5f;
          float right = pos.X + 0.5f;
-         float center = pos.X;
 
          float bot = pos.Y - 0.5f;
 
          float topLeft = bot + 1.0f / maxSaturation * lSat;
          float topRight = bot + 1.0f / maxSaturation * rSat;
-         float topCenter = bot + 1.0f / maxSaturation * saturation;
 
          GL.Color4(Color4.Blue);
 
@@ -83,27 +112,6 @@ namespace shootcraft.src.blocks
          GL.Vertex2(new Vector2(left, bot));
 
          GL.End();
-
-         //float left = pos.X - 0.5f;
-         //float right = pos.X + 0.5f;
-         //float center = pos.X;
-
-         //float bot = pos.Y - 0.5f;
-
-         //float topLeft = bot + 1.0f / maxSaturation * leftSatur;
-         //float topRight = bot + 1.0f / maxSaturation * rightSatur;
-         //float topCenter = bot + 1.0f / maxSaturation * saturation;
-
-         //GL.Color4(Color4.Blue);
-
-         //GL.Begin(PrimitiveType.Quads);
-
-         //GL.Vertex2(new Vector2(left, topLeft));
-         //GL.Vertex2(new Vector2(right, topRight));
-         //GL.Vertex2(new Vector2(right, bot));
-         //GL.Vertex2(new Vector2(left, bot));
-
-         //GL.End();
       }
    }
 }
