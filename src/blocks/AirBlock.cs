@@ -12,5 +12,10 @@ namespace shootcraft.src.blocks
    {
       public AirBlock() : base() { }
       public AirBlock(Vector2 pos) : base(pos) { }
+
+      public override void DrawTexture()
+      {
+
+      }
    }
 }

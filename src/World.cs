@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 
 using OpenTK;
+using OpenTK.Graphics;
 using shootcraft.src.structures;
 
 using Newtonsoft.Json;
@@ -23,6 +24,15 @@ namespace shootcraft.src
       public const int waterLevel = 16;
 
       public const float gForce = 4.5f;
+
+      public static Color4 DaySkyColor = new Color4(198, 250, 255, 255);
+
+      public static Color4 SkyColor
+      { get
+         {
+            return DaySkyColor;
+         }
+      }
 
       public static void Init()
       {

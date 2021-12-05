@@ -43,11 +43,9 @@ namespace shootcraft.src
          GL.End();
       }
 
-      public void DrawTexture()
+      public virtual void DrawTexture()
       {
          Rectangle rect = GetRectangle();
-
-         //GL.Enable(EnableCap.PolygonSmooth);
 
          GL.BindTexture(TextureTarget.Texture2D,
             TexturesHandler.blockTextures[GetType()]);

@@ -66,7 +66,7 @@ namespace shootcraft
 
          scale = 1.0f;
 
-         if (true)
+         if (false)
          {
             World.Init();
             player = new Player(new Vector2(0, 40.0f));
@@ -112,7 +112,7 @@ namespace shootcraft
          GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
          // Draw objects here
-         GL.ClearColor(0.1f, 0.2f, 0.5f, 0.0f);
+         GL.ClearColor(World.SkyColor);
 
          translation = screenCenterGame - player.pos;
 
