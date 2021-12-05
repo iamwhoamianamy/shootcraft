@@ -43,8 +43,10 @@ namespace shootcraft.src
          GL.End();
       }
 
-      public virtual void DrawTexture()
+      public virtual void Draw()
       {
+         GL.Color4(Color4.White);
+
          Rectangle rect = GetRectangle();
 
          GL.BindTexture(TextureTarget.Texture2D,
@@ -74,9 +76,8 @@ namespace shootcraft.src
          return new Rectangle(pos, 1.0f);
       }
 
-      public virtual void Update()
-      {
+      public virtual void Update() { }
 
-      }
+      public virtual void ForcedUpdate() { }
    }
 }

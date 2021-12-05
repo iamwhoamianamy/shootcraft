@@ -99,8 +99,7 @@ namespace shootcraft
 
          if(currentTick == 0)
          {
-            Vector2 drawing_center = player.pos;
-            World.SetVisibleChunks(drawing_center, 11);
+            World.SetVisibleChunks(player.pos, 11);
             World.UpdateVisibleChunks();
          }
 
