@@ -87,17 +87,17 @@ namespace shootcraft.src
       {
          List<Block> blocks = new List<Block>();
 
-         blocks.Add(World.GetBlock(pos, 0, -0));
+         blocks.Add(World.GetBlock(pos, -1, -1));
          blocks.Add(World.GetBlock(pos, 0, -1));
-         blocks.Add(World.GetBlock(pos, 0, -2));
-         blocks.Add(World.GetBlock(pos, 0, -3));
+         blocks.Add(World.GetBlock(pos, 1, -1));
 
          foreach (var block in blocks)
          {
-            float d = Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f));
+            float distanceY = Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f));
+            float distanceX = Math.Abs(pos.X - block.pos.X);
 
             if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) &&
-             d < 1e-1)
+                distanceY < 1e-1 && distanceX < 0.5f + width / 2)
             {
                IsStanding = true;
                return;
