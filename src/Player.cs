@@ -88,6 +88,8 @@ namespace shootcraft.src
 
       public void CheckForStanding()
       {
+         IsStanding = false;
+
          List<Block> blocks = new List<Block>();
 
          blocks.Add(World.GetBlock(pos, -1, -1));
@@ -96,17 +98,18 @@ namespace shootcraft.src
 
          foreach (var block in blocks)
          {
-            float distanceY = Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f));
-            float distanceX = Math.Abs(pos.X - block.pos.X);
-
-            if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) &&
-                distanceY < 1e-1 && distanceX < 0.5f + width / 2)
+            if (!(block is null))
             {
-               IsStanding = true;
-               return;
+               float distanceY = Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f));
+               float distanceX = Math.Abs(pos.X - block.pos.X);
+
+               if (block.GetType() != typeof(AirBlock) && block.GetType() != typeof(WaterBlock) &&
+                   distanceY < 1e-1 && distanceX < 0.5f + width / 2)
+               {
+                  IsStanding = true;
+                  return;
+               }
             }
-            else
-               IsStanding = false;
          }
       }
 
@@ -417,7 +420,7 @@ namespace shootcraft.src
 
             foreach (var block in surroundingBlocks)
             {
-               if (!(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
+               if (!(block is null) && !(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
                   return;
             }
 
@@ -442,7 +445,7 @@ namespace shootcraft.src
 
             foreach (var block in surroundingBlocks)
             {
-               if (!(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
+               if (!(block is null) && !(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
                {
                   doIntersect = true;
                   break;

@@ -18,6 +18,8 @@ namespace shootcraft.src
       private static Dictionary<int, Chunk> chunks;
       public static PerlinNoise perlinNoise;
 
+      private static Dictionary<int, Chunk> drawableChunks;
+
       public const int sandLayerWidth = 8;
       public const int sandLayerHeight = 6;
 
@@ -28,7 +30,8 @@ namespace shootcraft.src
       public static Color4 DaySkyColor = new Color4(198, 250, 255, 255);
 
       public static Color4 SkyColor
-      { get
+      { 
+         get
          {
             return DaySkyColor;
          }
@@ -37,6 +40,7 @@ namespace shootcraft.src
       public static void Init()
       {
          chunks = new Dictionary<int, Chunk>();
+         drawableChunks = new Dictionary<int, Chunk>();
          perlinNoise = new PerlinNoise(10000, 10, 9, 0.00001);
       }
 
@@ -53,16 +57,46 @@ namespace shootcraft.src
          return (int)Math.Floor(pos.X / Chunk.blockCountX);
       }
 
-      public static Chunk GetChunk(Vector2 pos, int blockOffsetX = 0)
-      {
-         return GetChunk(PosToChunkId(pos + new Vector2(blockOffsetX, 0)));
-      }
-
       public static int PerlinValueForX(float x)
       {
          return perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(x)];
       }
 
+      public static Chunk TryGetChunk(Vector2 pos, int blockOffsetX = 0)
+      {
+         return TryGetChunk(PosToChunkId(pos + new Vector2(blockOffsetX, 0)));
+      }
+
+      public static Chunk TryGetChunk(int chunkId)
+      {
+         if (chunks.ContainsKey(chunkId))
+         {
+            return chunks[chunkId];
+         }
+         else
+         {
+            return null;
+         }
+      }
+
+      public static Block TryGetBlock(Vector2 pos, int offsetX = 0, int offsetY = 0)
+      {
+         Chunk chunk = TryGetChunk(pos, offsetX);
+
+         if(chunk is null)
+         {
+            return null;
+         }
+         else
+         {
+            return GetBlock(pos, offsetX, offsetY);
+         }
+      }
+
+      public static Chunk GetChunk(Vector2 pos, int blockOffsetX = 0)
+      {
+         return GetChunk(PosToChunkId(pos + new Vector2(blockOffsetX, 0)));
+      }
 
       public static Chunk GetChunk(int chunkId)
       {
@@ -102,14 +136,31 @@ namespace shootcraft.src
          GetChunk(block.pos).SetBlock(block);
       }
 
-      public static void DrawVisibleChunks(Vector2 pos, int fow)
+      public static void SetVisibleChunks(Vector2 pos, int fow)
       {
          int center_chunk_id = PosToChunkId(pos);
+         drawableChunks = new Dictionary<int, Chunk>();
 
          for (int i = center_chunk_id - fow; i <= center_chunk_id + fow; i++)
          {
             Chunk chunk = GetChunk(i);
+            drawableChunks.Add(i, chunk);
+         }
+      }
+
+      public static void DrawVisibleChunks()
+      {
+         foreach (var chunk in drawableChunks.Values)
+         {
             chunk.DrawAllBlocks();
+         }
+      }
+
+      public static void UpdateVisibleChunks()
+      {
+         foreach (var chunk in drawableChunks.Values)
+         {
+            chunk.UpdateAllblocks();
          }
       }
 

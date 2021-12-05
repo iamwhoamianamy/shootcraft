@@ -28,9 +28,12 @@ namespace shootcraft
    /// </summary>
    public partial class MainWindow : Window
    {
-      private Timer timer;
+      private Timer drawingTimer;
+      private Timer worldUpdatingTimer;
       private float t = 0.0f;
       private const int fps = 60;
+      private const int ticksToUpdate = 20;
+      private int currentTick = 0;
       private const float ellapsed = 1.0f / fps;
       private Logger logger;
       private int screenW = 800, screenH = 450;
@@ -66,7 +69,7 @@ namespace shootcraft
 
          scale = 1.0f;
 
-         if (false)
+         if (true)
          {
             World.Init();
             player = new Player(new Vector2(0, 40.0f));
@@ -77,20 +80,43 @@ namespace shootcraft
             player = SavesHandler.RestorePlayerFromJson("world1");
          }
 
-         timer = new Timer(1.0 / fps * 1000);
-         timer.Elapsed += Timer_Elapsed;
-         timer.AutoReset = false;
-         timer.Start();
+         worldUpdatingTimer = new Timer(1.0 / ticksToUpdate * 1000);
+         worldUpdatingTimer.Elapsed += WorldUpdatingTimer_Elapsed;
+         worldUpdatingTimer.AutoReset = false;
+         worldUpdatingTimer.Start();
+
+         drawingTimer = new Timer(1.0 / fps * 1000);
+         drawingTimer.Elapsed += DrawingTimer_Elapsed;
+         drawingTimer.AutoReset = false;
+         drawingTimer.Start();
 
          player.ResolveCollisionPrediction(ellapsed);
       }
 
-      private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+      private void DrawingTimer_Elapsed(object sender, ElapsedEventArgs e)
       {
          UpdatePhysics();
-         glControl.Invalidate();
 
-         timer.Start();
+         if(currentTick == 0)
+         {
+            Vector2 drawing_center = player.pos;
+            World.SetVisibleChunks(drawing_center, 11);
+            World.UpdateVisibleChunks();
+         }
+
+         currentTick++;
+
+         if (currentTick == ticksToUpdate)
+            currentTick = 0;
+
+         glControl.Invalidate();
+         drawingTimer.Start();
+      }
+
+      private void WorldUpdatingTimer_Elapsed(object sender, ElapsedEventArgs e)
+      {
+
+         worldUpdatingTimer.Start();
       }
 
       private void UpdatePhysics()
@@ -122,9 +148,8 @@ namespace shootcraft
 
          GL.Translate(translation.X, translation.Y, 0);
 
-         Vector2 drawing_center = player.pos;
-
-         World.DrawVisibleChunks(drawing_center, 11);
+         
+         World.DrawVisibleChunks();
 
          player.Draw();
 
@@ -137,7 +162,7 @@ namespace shootcraft
          //currentChunk = cursor_chunk.Index;
          //cursor_chunk.DrawBorders();
          Block cursor_block = player.GetBlockUnderCursor();
-         cursor_block.DrawBorders();
+         cursor_block?.DrawBorders();
 
          player.DrawCursor();
 

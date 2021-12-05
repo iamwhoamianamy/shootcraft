@@ -199,5 +199,16 @@ namespace shootcraft.src
             }
          }
       }
+
+      public void UpdateAllblocks()
+      {
+         for (int i = 0; i < blockCountY; i++)
+         {
+            for (int j = 0; j < blockCountX; j++)
+            {
+               blocks[i][j].Update();
+            }
+         }
+      }
    }
 }

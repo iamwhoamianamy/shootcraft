@@ -73,5 +73,10 @@ namespace shootcraft.src
       {
          return new Rectangle(pos, 1.0f);
       }
+
+      public virtual void Update()
+      {
+
+      }
    }
 }

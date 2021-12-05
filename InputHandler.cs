@@ -57,23 +57,27 @@ namespace shootcraft
       private void glControl_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
       {
          //Vector2 block_pos = player.cursor.pos;
-         Vector2 cursor = player.GetBlockUnderCursor().pos;
+         Block block = player.GetBlockUnderCursor();
 
-         switch(e.Button)
+         if(!(block is null))
          {
-            case System.Windows.Forms.MouseButtons.Left:
+            switch (e.Button)
             {
-               World.SetBlock(new AirBlock(cursor));
+               case System.Windows.Forms.MouseButtons.Left:
+               {
+                  World.SetBlock(new AirBlock(block.pos));
 
-               break;
-            }
-            case System.Windows.Forms.MouseButtons.Right:
-            {
-               World.SetBlock(new DirtBlock(cursor));
+                  break;
+               }
+               case System.Windows.Forms.MouseButtons.Right:
+               {
+                  World.SetBlock(new DirtBlock(block.pos));
 
-               break;
+                  break;
+               }
             }
          }
+
       }
       private void glControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
       {
