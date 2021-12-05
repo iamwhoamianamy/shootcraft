@@ -83,6 +83,11 @@ namespace shootcraft
 
       private void ControllPlayer()
       {
+         if (Keyboard.GetState().IsKeyDown(Key.LShift))
+            player.IsRunning = true;
+         else
+            player.IsRunning = false;
+
          if (Keyboard.GetState().IsKeyDown(Key.Space))
          {
             player.Jump();

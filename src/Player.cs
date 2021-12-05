@@ -36,10 +36,13 @@ namespace shootcraft.src
 
       public static float height = 1.75f;
       public static float width = 0.5f;
-      public float speed = 0.6f;
-      public float runningSpeed = 7.5f;
+      public float speed = 0.2f;
+      public float runningSpeed = 0.6f;
       public float jumpMomentum = 4.0f;
       public float accessRadius = 7.5f;
+      public bool IsRunning { get; set; }
+
+      public float MovingSpeed => IsRunning ? runningSpeed : speed;
 
       public Cursor cursor;
       public Rectangle hull;
@@ -459,43 +462,6 @@ namespace shootcraft.src
             }
          }
       }
-
-      //public void ResolveCollisionPrediction(float ellapsed)
-      //{
-      //   int repeats = 30;
-      //   float iter_duration = ellapsed / repeats;
-
-      //   bool doIntersect = false;
-
-      //   for (int r = 0; r < repeats; r++)
-      //   {
-      //      Vector2 nextPos = hull.center + vel * iter_duration + acc * iter_duration * iter_duration / 2;
-      //      Rectangle newHull = new Rectangle(nextPos, width, height);
-
-      //      SetSurroundingBlocks();
-
-      //      foreach (var block in surroundingBlocks)
-      //      {
-      //         if (!(block is AirBlock) && !(block is WaterBlock) && newHull.Intersect(block.GetRectangle()))
-      //         {
-      //            doIntersect = true;
-      //            break;
-      //         }
-      //      }
-
-      //      if (doIntersect)
-      //      {
-      //         acc = Vector2.Zero;
-      //         vel = Vector2.Zero;
-      //         return;
-      //      }
-      //      else
-      //      {
-      //         pos = nextPos;
-      //      }
-      //   }
-      //}
-
       public void ApplyForce(Vector2 force)
       {
          acc += force;
@@ -540,22 +506,22 @@ namespace shootcraft.src
 
       public void GoLeft()
       {
-         ResolveCollisionOnMoving(new Vector2(-speed, 0.0f));
+         ResolveCollisionOnMoving(new Vector2(-MovingSpeed, 0.0f));
       }
 
       public void GoRight()
       {
-         ResolveCollisionOnMoving(new Vector2(speed, 0.0f));
+         ResolveCollisionOnMoving(new Vector2(MovingSpeed, 0.0f));
       }
 
       public void GoUp()
       {
-         ResolveCollisionOnMoving(new Vector2(0.0f, speed));
+         ResolveCollisionOnMoving(new Vector2(0.0f, MovingSpeed));
       }
 
       public void GoDown()
       {
-         ResolveCollisionOnMoving(new Vector2(0.0f, -speed));
+         ResolveCollisionOnMoving(new Vector2(0.0f, -MovingSpeed));
       }
 
       public void Jump()
