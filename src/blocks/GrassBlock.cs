@@ -18,7 +18,7 @@ namespace shootcraft.src.blocks
          Block block = World.GetBlock(pos, 0, 1);
 
          if (!(block is null) && !(block is AirBlock))
-            World.SetBlock(new DirtBlock(pos));
+            World.BlocksToUpdate.Add(new DirtBlock(pos));
       }
    }
 }

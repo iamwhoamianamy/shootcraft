@@ -26,7 +26,7 @@ namespace shootcraft.src.blocks
                   return;
             }
 
-            World.SetBlock(new GrassBlock(pos));
+            World.BlocksToUpdate.Add(new GrassBlock(pos));
          }
       }
    }
