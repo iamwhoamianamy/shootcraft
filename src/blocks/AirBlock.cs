@@ -31,21 +31,21 @@ namespace shootcraft.src.blocks
 
          Block cUpppB = World.GetBlock(pos, +0, +1);
 
-         if(!(lCentB is null) && lCentB is WaterBlock &&
+         if(!(lCentB is null) && lCentB is WaterBlock lwb && (lwb.isConnectedToSource || lwb.isSource) &&
             !(lDownB is null) && !(lDownB is AirBlock || lDownB is WaterBlock))
          {
             doTransorm = true;
-            saturation = Math.Max(saturation, (lCentB as WaterBlock).saturation - 1);
+            saturation = Math.Max(saturation, lwb.saturation - 1);
          }
 
-         if (!(rCentB is null) && rCentB is WaterBlock &&
+         if (!(rCentB is null) && rCentB is WaterBlock rwb && (rwb.isConnectedToSource || rwb.isSource) &&
              !(rDownB is null) && !(rDownB is AirBlock || rDownB is WaterBlock))
          {
             doTransorm = true;
-            saturation = Math.Max(saturation, (rCentB as WaterBlock).saturation - 1);
+            saturation = Math.Max(saturation, rwb.saturation - 1);
          }
 
-         if(!(cUpppB is null) &&  cUpppB is WaterBlock)
+         if(!(cUpppB is null) &&  cUpppB is WaterBlock uwb && (uwb.isConnectedToSource || uwb.isSource))
          {
             doTransorm = true;
             saturation = WaterBlock.maxSaturation;
@@ -54,8 +54,10 @@ namespace shootcraft.src.blocks
          if (doTransorm && saturation > 0)
          {
             WaterBlock waterBlock = new WaterBlock(pos, saturation);
+            waterBlock.isSource = false;
 
-            World.SetBlock(waterBlock);
+            //World.SetBlock(waterBlock);
+            World.BlocksToUpdate.Add(waterBlock);
          }
       }
    }

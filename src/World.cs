@@ -16,11 +16,10 @@ namespace shootcraft.src
    public static class World
    {
       public static Random RNG { get; private set; }
-
-      private static Dictionary<int, Chunk> chunks;
       public static PerlinNoise perlinNoise;
-
+      private static Dictionary<int, Chunk> chunks;
       private static Dictionary<int, Chunk> drawableChunks;
+      public static List<Block> BlocksToUpdate { get; private set; }
 
       public const int sandLayerWidth = 8;
       public const int sandLayerHeight = 6;
@@ -45,6 +44,7 @@ namespace shootcraft.src
          drawableChunks = new Dictionary<int, Chunk>();
          perlinNoise = new PerlinNoise(10000, 10, 9, 0.00001);
          RNG = new Random();
+         BlocksToUpdate = new List<Block>();
       }
 
       public static void RestoreChunks()
@@ -161,9 +161,25 @@ namespace shootcraft.src
 
       public static void UpdateVisibleChunks()
       {
+         SetBlocksToUpdate();
+         UpdateBlocks();
+      }
+      
+      private static void SetBlocksToUpdate()
+      {
+         BlocksToUpdate = new List<Block>();
+
          foreach (var chunk in drawableChunks.Values)
          {
-            chunk.UpdateAllblocks();
+            chunk.SetBlocksToUpdate();
+         }
+      }
+
+      private static void UpdateBlocks()
+      {
+         foreach (var block in BlocksToUpdate)
+         {
+            SetBlock(block);
          }
       }
 
@@ -182,6 +198,8 @@ namespace shootcraft.src
 
       public static void RestoreFromJson(string name)
       {
+         RNG = new Random();
+
          string jsonString;
          var settings = new JsonSerializerSettings();
          settings.TypeNameHandling = TypeNameHandling.Objects;

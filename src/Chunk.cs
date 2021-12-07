@@ -198,7 +198,7 @@ namespace shootcraft.src
          }
       }
 
-      public void UpdateAllblocks()
+      public void SetBlocksToUpdate()
       {
          for (int i = 0; i < blockCountY; i++)
          {

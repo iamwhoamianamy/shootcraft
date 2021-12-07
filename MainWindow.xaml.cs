@@ -32,7 +32,7 @@ namespace shootcraft
       private Timer worldUpdatingTimer;
       private float t = 0.0f;
       private const int fps = 60;
-      private const int ticksToUpdate = 20;
+      private const int ticksToUpdate = 5;
       private int currentTick = 0;
       private const float ellapsed = 1.0f / fps;
       private Logger logger;
