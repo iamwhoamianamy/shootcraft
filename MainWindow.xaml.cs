@@ -17,6 +17,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using shootcraft.src;
+using shootcraft.src.blocks;
 
 using Keyboard = OpenTK.Input.Keyboard;
 using Key = OpenTK.Input.Key;
@@ -42,7 +43,6 @@ namespace shootcraft
       private Vector2 screenCenterGame;
       private Vector2 translation;
       private float scale;
-      private int currentChunk = 0;
       private float globalScaling = 20.0f;
 
       public MainWindow()
@@ -73,6 +73,8 @@ namespace shootcraft
          {
             World.Init();
             player = new Player(new Vector2(0, 40.0f));
+            World.SetVisibleChunks(player.pos, player.fow);
+            World.UpdateLighting();
          }
          else
          {
@@ -91,6 +93,7 @@ namespace shootcraft
          drawingTimer.Start();
 
          player.ResolveCollisionPrediction(ellapsed);
+
       }
 
       private void DrawingTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -106,7 +109,7 @@ namespace shootcraft
       {
          if (currentTick == 0)
          {
-            World.SetVisibleChunks(player.pos, 11);
+            World.SetVisibleChunks(player.pos, player.fow);
             World.UpdateVisibleChunks();
          }
 
@@ -165,9 +168,22 @@ namespace shootcraft
          //currentChunk = cursor_chunk.Index;
          //cursor_chunk.DrawBorders();
          Block cursor_block = player.GetBlockUnderCursor();
+
+         GL.Color4(Color4.Black);
          cursor_block?.DrawBorders();
 
          player.DrawCursor();
+
+         //var line = RasterMaster.RasterLine(player.pos, player.cursor.pos);
+
+         //GL.Color4(Color4.Red);
+
+         //foreach (var block in line)
+         //{
+         //   block?.DrawBorders();
+         //}
+
+         //DrawCircle();
 
          GL.Translate(-translation.X, -translation.Y, 0);
 
@@ -177,7 +193,28 @@ namespace shootcraft
 
          glControl.SwapBuffers();
 
-         Title = $"{player.cursor.pos} {currentChunk}";
+         Title = $"{player.cursor.pos} {World.PosToChunkId(player.cursor.pos)}";
+      }
+
+      private void DrawCircle()
+      {
+         Vector2 start = player.pos;
+         List<Vector2> circle = RasterMaster.GetShiftedCircle(start);
+
+         GL.Color4(Color4.Green);
+
+         foreach (var vec in circle)
+         {
+            var ray = RasterMaster.RasterLine(start, vec);
+
+            foreach (var (block, dist) in ray)
+            {
+               float saturation = dist / RasterMaster.circleRadius;
+               block.GetRectangle().DrawColor(new Color4(saturation, saturation, saturation, 1.0f));
+            }
+
+            //World.TryGetBlock(vec)?.DrawBorders();
+         }
       }
 
       private void glControl_Resize(object sender, EventArgs e)

@@ -40,6 +40,8 @@ namespace shootcraft.src
       public const float runningSpeed = 0.6f;
       public const float jumpMomentum = 4.0f;
       public const float accessRadius = 7.5f;
+
+      public int fow = 5;
       public bool IsRunning { get; set; }
 
       public float MovingSpeed => IsRunning ? runningSpeed : walkingSpeed;

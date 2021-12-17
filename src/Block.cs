@@ -10,6 +10,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
 using Newtonsoft.Json;
+using shootcraft.src.blocks;
 
 namespace shootcraft.src
 {
@@ -17,6 +18,20 @@ namespace shootcraft.src
    public class Block : IBlockRegisterable
    {
       public Vector2 pos;
+      public const int maxLightLevel = 8;
+
+      private int lightLevel = 0;
+      public int LightLevel
+      {
+         get
+         {
+            return lightLevel;
+         }
+         set
+         {
+            lightLevel = Math.Max(0, Math.Min(value, maxLightLevel));
+         }
+      }
 
       public Block()
       {
@@ -32,7 +47,6 @@ namespace shootcraft.src
       {
          Rectangle rect = GetRectangle();
 
-         GL.Color4(Color4.Black);
          GL.Begin(PrimitiveType.LineLoop);
 
          for (int i = 0; i < 4; i++)
@@ -45,30 +59,17 @@ namespace shootcraft.src
 
       public virtual void Draw()
       {
-         GL.Color4(Color4.White);
 
          Rectangle rect = GetRectangle();
 
          GL.BindTexture(TextureTarget.Texture2D,
             TexturesHandler.blockTextures[GetType()]);
 
-         GL.Enable(EnableCap.Texture2D);
-         GL.Begin(PrimitiveType.Quads);
+         rect.DrawTexture();
 
-         GL.TexCoord2(new Vector2(0, 0));
-         GL.Vertex2(rect.rightTop.X, rect.rightTop.Y);
-
-         GL.TexCoord2(new Vector2(1, 0));
-         GL.Vertex2(rect.leftTop.X, rect.leftTop.Y);
-
-         GL.TexCoord2(new Vector2(1, 1));
-         GL.Vertex2(rect.leftBot.X, rect.leftBot.Y);
-
-         GL.TexCoord2(new Vector2(0, 1));
-         GL.Vertex2(rect.rightBot.X, rect.rightBot.Y);
-
-         GL.End();
-         GL.Disable(EnableCap.Texture2D);
+         byte light = (byte)(255 / maxLightLevel * LightLevel);
+         rect.DrawColor(new Color4(0, 0, 0, (byte)(255 - light)));
+         //GL.BlendFunc(BlendingFactor.);
       }
 
       public Rectangle GetRectangle()
@@ -77,6 +78,12 @@ namespace shootcraft.src
       }
 
       public virtual void Update() { }
+
+      //public virtual void Destroy()
+      //{
+      //   World.SetBlock(new AirBlock(pos));
+      //   World.UpdateLightingInBlockChunk(this);
+      //}
 
       public virtual void ForcedUpdate() { }
    }

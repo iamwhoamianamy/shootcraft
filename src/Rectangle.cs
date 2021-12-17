@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace shootcraft.src
 {
@@ -80,6 +82,47 @@ namespace shootcraft.src
                 Contain(rect.leftBot) || Contain(rect.rightBot) ||
                 rect.Contain(leftTop) || rect.Contain(rightTop) ||
                 rect.Contain(leftBot) || rect.Contain(rightBot);
+      }
+      
+      public void DrawTexture()
+      {
+         GL.Color4(Color4.White);
+
+         GL.Enable(EnableCap.Texture2D);
+         GL.Begin(PrimitiveType.Quads);
+
+         GL.TexCoord2(new Vector2(0, 0));
+         GL.Vertex2(rightTop.X, rightTop.Y);
+
+         GL.TexCoord2(new Vector2(1, 0));
+         GL.Vertex2(leftTop.X, leftTop.Y);
+
+         GL.TexCoord2(new Vector2(1, 1));
+         GL.Vertex2(leftBot.X, leftBot.Y);
+
+         GL.TexCoord2(new Vector2(0, 1));
+         GL.Vertex2(rightBot.X, rightBot.Y);
+
+         GL.End();
+         GL.Disable(EnableCap.Texture2D);
+      }
+
+      public void DrawColor(Color4 color)
+      {
+         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+         GL.Enable(EnableCap.Blend);
+         GL.DepthMask(false);
+         GL.Begin(PrimitiveType.Quads);
+
+         GL.Color4(color);
+         GL.Vertex2(rightTop.X, rightTop.Y);
+         GL.Vertex2(leftTop.X, leftTop.Y);
+         GL.Vertex2(leftBot.X, leftBot.Y);
+         GL.Vertex2(rightBot.X, rightBot.Y);
+
+         GL.End();
+         GL.DepthMask(true);
+         GL.Disable(EnableCap.Blend);
       }
    }
 }

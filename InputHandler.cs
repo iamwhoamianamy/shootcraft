@@ -65,20 +65,22 @@ namespace shootcraft
             {
                case System.Windows.Forms.MouseButtons.Left:
                {
-                  World.SetBlock(new AirBlock(block.pos));
+                  World.SetBlockAndUpdateLight(new AirBlock(block.pos));
 
                   break;
                }
                case System.Windows.Forms.MouseButtons.Right:
                {
-                  World.SetBlock(new DirtBlock(block.pos));
+                  World.SetBlockAndUpdateLight(new StoneBlock(block.pos));
 
                   break;
                }
             }
          }
-
       }
+
+      
+
       private void glControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
       {
          const float scalingFactor = 1.1f;

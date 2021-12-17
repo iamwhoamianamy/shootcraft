@@ -18,7 +18,7 @@ namespace shootcraft.src
       public static Random RNG { get; private set; }
       public static PerlinNoise perlinNoise;
       private static Dictionary<int, Chunk> chunks;
-      private static Dictionary<int, Chunk> drawableChunks;
+      private static Dictionary<int, Chunk> visibleChunks;
       public static List<Block> BlocksToUpdate { get; private set; }
 
       public const int sandLayerWidth = 8;
@@ -41,7 +41,7 @@ namespace shootcraft.src
       public static void Init()
       {
          chunks = new Dictionary<int, Chunk>();
-         drawableChunks = new Dictionary<int, Chunk>();
+         visibleChunks = new Dictionary<int, Chunk>();
          perlinNoise = new PerlinNoise(10000, 10, 9, 0.00001);
          RNG = new Random();
          BlocksToUpdate = new List<Block>();
@@ -63,6 +63,19 @@ namespace shootcraft.src
       public static int PerlinValueForX(float x)
       {
          return perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(x)];
+      }
+      
+      public static void UpdateLighting()
+      {
+         foreach (var chunk in visibleChunks.Values)
+         {
+            chunk.ResetLighting();
+         }
+
+         foreach (var chunk in visibleChunks.Values)
+         {
+            chunk.UpdateLighting();
+         }
       }
 
       public static Chunk TryGetChunk(Vector2 pos, int blockOffsetX = 0)
@@ -138,22 +151,26 @@ namespace shootcraft.src
       {
          GetChunk(block.pos).SetBlock(block);
       }
+      public static void SetBlockAndUpdateLight(Block block)
+      {
+         GetChunk(block.pos).SetBlockAndUpdateLight(block);
+      }
 
       public static void SetVisibleChunks(Vector2 pos, int fow)
       {
          int center_chunk_id = PosToChunkId(pos);
-         drawableChunks = new Dictionary<int, Chunk>();
+         visibleChunks = new Dictionary<int, Chunk>();
 
          for (int i = center_chunk_id - fow; i <= center_chunk_id + fow; i++)
          {
             Chunk chunk = GetChunk(i);
-            drawableChunks.Add(i, chunk);
+            visibleChunks.Add(i, chunk);
          }
       }
 
       public static void DrawVisibleChunks()
       {
-         foreach (var chunk in drawableChunks.Values)
+         foreach (var chunk in visibleChunks.Values)
          {
             chunk.DrawAllBlocks();
          }
@@ -169,7 +186,7 @@ namespace shootcraft.src
       {
          BlocksToUpdate = new List<Block>();
 
-         foreach (var chunk in drawableChunks.Values)
+         foreach (var chunk in visibleChunks.Values)
          {
             chunk.SetBlocksToUpdate();
          }
@@ -181,6 +198,9 @@ namespace shootcraft.src
          {
             SetBlock(block);
          }
+
+         if (BlocksToUpdate.Count != 0)
+            UpdateLighting();
       }
 
       public static void SaveToJson(string name)
