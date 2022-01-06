@@ -123,17 +123,9 @@ namespace shootcraft.src
 
             if (perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
             {
-               Tree tree = Tree.SmallTree(new Vector2(chunk.StartX + 4.0f, perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
-
-               for (int i = 0; i < tree.Height; i++)
-               {
-                  for (int j = 0; j < tree.Width; j++)
-                  {
-                     if (tree.blocks[i][j] != null)
-                        SetBlock(tree.blocks[i][j]);
-                  }
-               }
+               Tree.Insert(StructureHandler.trees[RNG.Next(0, 4)], new Vector2(chunk.StartX + 4.0f, perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
             }
+
             Logger.Log($"Created chunk {chunkId}");
 
             return chunk;

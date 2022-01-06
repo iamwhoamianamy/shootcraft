@@ -24,28 +24,5 @@ namespace shootcraft.src
             blocks[i] = new Block[Width];
       }
 
-      public static Structure FromFile(string file)
-      {
-         Structure s;
-         List<string> blockSignatures = new List<string>();
-         using (StreamReader sr = new StreamReader(file))
-         {
-            while (!sr.EndOfStream)
-            {
-               blockSignatures.Add(sr.ReadLine());
-            }
-         }
-         s = new Structure(blockSignatures[0].Length, blockSignatures.Count);
-
-         //for (int i = 0; i < s.Height; i++)
-         //{
-         //   for (int j = 0; j < s.Width; j++)
-         //   {
-         //      s.blocks[i][j] = 
-         //   }
-         //}
-         return s;
-      }
-
    }
 }
