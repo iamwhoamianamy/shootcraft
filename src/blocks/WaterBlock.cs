@@ -9,16 +9,21 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
+using Newtonsoft.Json;
+
 namespace shootcraft.src.blocks
 {
-   public class WaterBlock : Block, IPassableBlock
+    [JsonObject(MemberSerialization.OptIn)]
+    public class WaterBlock : Block, IPassableBlock
    {
       public const float viscosity = 0.1f;
       public const double evaporationRate = 0.5;
       public const int maxSaturation = 16;
+      [JsonProperty]
       public int saturation = maxSaturation;
-
+      [JsonProperty]
       public bool isConnectedToSource = true;
+      [JsonProperty]
       public bool isSource = true;
 
       public WaterBlock() : base() { }

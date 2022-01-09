@@ -21,6 +21,7 @@ using shootcraft.src.blocks;
 
 using Keyboard = OpenTK.Input.Keyboard;
 using Key = OpenTK.Input.Key;
+using System.IO;
 
 namespace shootcraft
 {
@@ -54,6 +55,16 @@ namespace shootcraft
          glControl.MakeCurrent();
       }
 
+      public Player GetPlayer()
+      {
+         return player;
+      }
+
+      public void SetPlayer(Player player)
+      {
+         this.player = player;
+      }
+
       private void glControl_Load(object sender, EventArgs e)
       {
          //glControl.Cursor = System.Windows.Forms.Cursors.No;
@@ -71,17 +82,21 @@ namespace shootcraft
 
          scale = 1.0f;
 
-         if (true)
+         if (File.Exists(SavesHandler.path + SavesHandler.worldName + ".zip"))
+         //if(false)
+         {
+            SavesHandler.SetWorldNameToLastPlayed();
+            SavesHandler.DecompressJsons(SavesHandler.worldName);
+            World.RestoreFromJson(SavesHandler.worldName);
+            player = SavesHandler.RestorePlayerFromJson(SavesHandler.worldName);
+            SavesHandler.CompressJsons(SavesHandler.worldName);
+         }
+         else
          {
             World.Init();
             player = new Player(new Vector2(0, 40.0f));
             World.SetVisibleChunks(player.pos, player.fow);
             World.UpdateLighting();
-         }
-         else
-         {
-            World.RestoreFromJson("world1");
-            player = SavesHandler.RestorePlayerFromJson("world1");
          }
 
          worldUpdatingTimer = new Timer(1.0 / ticksToUpdate * 1000);
@@ -230,8 +245,11 @@ namespace shootcraft
       private void Window_Closed(object sender, EventArgs e)
       {
          Logger.Close();
-         World.SaveToJson("world1");
-         SavesHandler.SaveToJson(player, "world1");
+         SavesHandler.DecompressJsons(SavesHandler.worldName);
+         SavesHandler.SaveToJson(player, SavesHandler.worldName);
+         World.SaveToJson(SavesHandler.worldName);
+         SavesHandler.CompressJsons(SavesHandler.worldName);
+         SavesHandler.AddLastPlayedInfo();
       }
    }
 }
