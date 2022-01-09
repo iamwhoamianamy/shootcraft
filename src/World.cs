@@ -151,13 +151,18 @@ namespace shootcraft.src
       public static void SetVisibleChunks(Vector2 pos, int fow)
       {
          int center_chunk_id = PosToChunkId(pos);
-         visibleChunks = new Dictionary<int, Chunk>();
+         var newVisibleChunks = new Dictionary<int, Chunk>();
 
          for (int i = center_chunk_id - fow; i <= center_chunk_id + fow; i++)
          {
             Chunk chunk = GetChunk(i);
-            visibleChunks.Add(i, chunk);
+            newVisibleChunks.Add(i, chunk);
+
+            if (!visibleChunks.ContainsKey(i))
+               chunk.UpdateLighting();
          }
+
+         visibleChunks = newVisibleChunks;
       }
 
       public static void DrawVisibleChunks()
