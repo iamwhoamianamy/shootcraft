@@ -15,7 +15,7 @@ namespace shootcraft.src.blocks
       public override void Update()
       {
          Block blockUnder = World.GetBlock(pos, 0, -1);
-         if (!(blockUnder is null) && blockUnder is AirBlock || blockUnder is WaterBlock)
+         if (blockUnder is not null && blockUnder is IPassableBlock)
          {
             World.BlocksToUpdate.Add(new AirBlock(pos));
             World.BlocksToUpdate.Add(new SandBlock(blockUnder.pos));

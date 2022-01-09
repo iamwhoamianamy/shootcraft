@@ -11,7 +11,7 @@ using OpenTK;
 
 namespace shootcraft.src.blocks
 {
-   public class WaterBlock : Block
+   public class WaterBlock : Block, IPassableBlock
    {
       public const float viscosity = 0.1f;
       public const double evaporationRate = 0.5;
@@ -43,7 +43,7 @@ namespace shootcraft.src.blocks
 
       private bool CheckForConnectionToSourceAtSide(Block sideBlock)
       {
-         return !(sideBlock is null) && sideBlock is WaterBlock swb &&
+         return sideBlock is not null && sideBlock is WaterBlock swb &&
                  (swb.isSource || (swb.isConnectedToSource && saturation < swb.saturation));
       }
 
@@ -51,7 +51,7 @@ namespace shootcraft.src.blocks
       {
          Block upperBlock = World.GetBlock(pos, +0, +1);
 
-         return !(upperBlock is null) && upperBlock is WaterBlock uwb &&
+         return upperBlock is not null && upperBlock is WaterBlock uwb &&
                 (uwb.isSource || uwb.isConnectedToSource);
       }
 
@@ -71,21 +71,21 @@ namespace shootcraft.src.blocks
          Block rightBlock = World.GetBlock(pos, +1, +0);
          Block upperBlock = World.GetBlock(pos, +0, +1);
 
-         if (!(leftBlock is null) && leftBlock is WaterBlock)
+         if (leftBlock is not null && leftBlock is WaterBlock lwb)
          {
-            saturation = Math.Max((leftBlock as WaterBlock).saturation - 1, saturation);
+            saturation = Math.Max(lwb.saturation - 1, saturation);
          }
 
-         if (!(rightBlock is null) && rightBlock is WaterBlock)
+         if (rightBlock is not null && rightBlock is WaterBlock rwb)
          {
-            saturation = Math.Max((rightBlock as WaterBlock).saturation - 1, saturation);
+            saturation = Math.Max(rwb.saturation - 1, saturation);
          }
 
-         if (!(upperBlock is null) && upperBlock is WaterBlock)
+         if (upperBlock is not null && upperBlock is WaterBlock uwb)
          {
-            if (saturation < (upperBlock as WaterBlock).saturation)
+            if (saturation < uwb.saturation)
             {
-               saturation = (upperBlock as WaterBlock).saturation;
+               saturation = uwb.saturation;
             }
          }
       }
@@ -95,8 +95,8 @@ namespace shootcraft.src.blocks
          Block leftBlock = World.GetBlock(pos, -1, +0);
          Block rightBlock = World.GetBlock(pos, +1, +0);
 
-         return (!(leftBlock is null) && !(leftBlock is WaterBlock) &&
-                 !(rightBlock is null) && !(rightBlock is WaterBlock));
+         return leftBlock is not null && leftBlock is not WaterBlock &&
+                 rightBlock is not null && rightBlock is not WaterBlock;
       }
 
       public override void Update()
@@ -153,11 +153,11 @@ namespace shootcraft.src.blocks
          float lSat = saturation;
          float rSat = saturation;
 
-         if (!(leftBlock is null) && leftBlock is WaterBlock)
-            lSat = Math.Max((leftBlock as WaterBlock).saturation, saturation);
+         if (leftBlock is not null && leftBlock is WaterBlock lwb)
+            lSat = Math.Max(lwb.saturation, saturation);
 
-         if (!(rightBlock is null) && rightBlock is WaterBlock)
-            rSat = Math.Max((rightBlock as WaterBlock).saturation, saturation);
+         if (rightBlock is not null && rightBlock is WaterBlock rwb)
+            rSat = Math.Max(rwb.saturation, saturation);
 
          float left = pos.X - 0.5f;
          float right = pos.X + 0.5f;

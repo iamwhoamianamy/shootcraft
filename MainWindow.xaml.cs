@@ -67,9 +67,11 @@ namespace shootcraft
          screenCenterWindow.X = screenW / 2;
          screenCenterWindow.Y = screenH / 2;
 
+         GUI.SetDimensions(screenW, screenH);
+
          scale = 1.0f;
 
-         if (false)
+         if (true)
          {
             World.Init();
             player = new Player(new Vector2(0, 40.0f));
@@ -143,57 +145,45 @@ namespace shootcraft
       {
          GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-         // Draw objects here
          GL.ClearColor(World.SkyColor);
 
          translation = screenCenterGame - player.pos;
 
+         GL.Scale(globalScaling, globalScaling, 0);
          GL.Translate(screenCenterGame.X, screenCenterGame.Y, 0);
          GL.Scale(scale, scale, 0);
          GL.Translate(-screenCenterGame.X, -screenCenterGame.Y, 0);
-
          GL.Translate(translation.X, translation.Y, 0);
 
-         
+         DrawInWorldCoordinates();
+
+         GL.Translate(-translation.X, -translation.Y, 0);
+         GL.Translate(screenCenterGame.X, screenCenterGame.Y, 0);
+         GL.Scale(1 / scale, 1 / scale, 0);
+         GL.Translate(-screenCenterGame.X, -screenCenterGame.Y, 0);
+         GL.Scale(1 / globalScaling, 1 / globalScaling, 0);
+
+         if (player.IsEnventoryOpened)
+            player.MyInventory.Draw();
+
+         //Title = $"{player.cursor.pos} {World.PosToChunkId(player.cursor.pos)}";
+         Title = $"{player.MyInventory.ActiveCell}";
+
+         glControl.SwapBuffers();
+      }
+
+      private void DrawInWorldCoordinates()
+      {
          World.DrawVisibleChunks();
 
          player.Draw();
 
-         //Chunk player_chunk = chunkHandler.GetChunk(player.pos);
-         //player_chunk.DrawBorders();
-         //Block player_block = player_chunk.GetBlock(player.pos);
-         //player_block.DrawBorders();
-
-         //Chunk cursor_chunk = World.GetChunk(player.cursor.pos);
-         //currentChunk = cursor_chunk.Index;
-         //cursor_chunk.DrawBorders();
          Block cursor_block = player.GetBlockUnderCursor();
 
          GL.Color4(Color4.Black);
          cursor_block?.DrawBorders();
 
          player.DrawCursor();
-
-         //var line = RasterMaster.RasterLine(player.pos, player.cursor.pos);
-
-         //GL.Color4(Color4.Red);
-
-         //foreach (var block in line)
-         //{
-         //   block?.DrawBorders();
-         //}
-
-         //DrawCircle();
-
-         GL.Translate(-translation.X, -translation.Y, 0);
-
-         GL.Translate(screenCenterGame.X, screenCenterGame.Y, 0);
-         GL.Scale(1 / scale, 1 / scale, 0);
-         GL.Translate(-screenCenterGame.X, -screenCenterGame.Y, 0);
-
-         glControl.SwapBuffers();
-
-         Title = $"{player.cursor.pos} {World.PosToChunkId(player.cursor.pos)}";
       }
 
       private void DrawCircle()
@@ -226,12 +216,13 @@ namespace shootcraft
          screenCenterWindow.Y = screenH / 2;
 
          screenCenterGame = screenCenterWindow / globalScaling;
+         GUI.SetDimensions(screenW, screenH);
 
          GL.Disable(EnableCap.DepthTest);
          GL.Viewport(0, 0, screenW, screenH);
          GL.MatrixMode(MatrixMode.Projection);
          GL.LoadIdentity();
-         GL.Ortho(0, screenW / globalScaling, 0, screenH / globalScaling, -1.0, 1.0);
+         GL.Ortho(0, screenW, 0, screenH, -1.0, 1.0);
          GL.MatrixMode(MatrixMode.Modelview);
          GL.LoadIdentity();
       }

@@ -41,7 +41,9 @@ namespace shootcraft.src
       public const float jumpMomentum = 4.0f;
       public const float accessRadius = 7.5f;
 
-      public int fow = 5;
+      public bool IsEnventoryOpened { get; set; }
+
+      public int fow = 3;
       public bool IsRunning { get; set; }
 
       public float MovingSpeed => IsRunning ? runningSpeed : walkingSpeed;
@@ -53,8 +55,12 @@ namespace shootcraft.src
       public bool IsStanding { get; private set; }
       public bool IsWaterLogged { get; private set; }
 
+      public Item HoldingItem { get; set; } 
+
       [JsonProperty]
       public Color4 color;
+
+      public Inventory MyInventory { get; private set; }
 
       public Player(Vector2 pos)
       {
@@ -69,7 +75,21 @@ namespace shootcraft.src
 
          color = Color4.Blue;
 
+         IsEnventoryOpened = false;
+
+         MyInventory = new Inventory();
+
          SetSurroundingBlocks();
+      }
+
+      public void ApplyHoldingItem()
+      {
+         if(HoldingItem is not null &&
+            HoldingItem.Storage is Block)
+         {
+            Block block = GetBlockUnderCursor();
+            World.SetBlockAndUpdateLight((Block)Activator.CreateInstance(HoldingItem.Storage.GetType(), block.pos));
+         }
       }
 
       public void BuildHull()
@@ -100,7 +120,7 @@ namespace shootcraft.src
 
          foreach (var block in blocks)
          {
-            if (!(block is null))
+            if (block is not null)
             {
                float distanceY = Math.Abs(pos.Y - height / 4 - (block.pos.Y + 1.0f));
                float distanceX = Math.Abs(pos.X - block.pos.X);

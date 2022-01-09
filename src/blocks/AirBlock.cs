@@ -8,7 +8,7 @@ using OpenTK;
 
 namespace shootcraft.src.blocks
 {
-   public class AirBlock : Block
+   public class AirBlock : Block, IPassableBlock
    {
       public AirBlock() : base() { }
       public AirBlock(Vector2 pos) : base(pos) { }

@@ -22,7 +22,7 @@ namespace shootcraft.src.blocks
             {
                Block block = World.GetBlock(pos, 0, i);
 
-               if (!(block is null) && !(block is AirBlock))
+               if (block is not null && block is not AirBlock)
                   return;
             }
 

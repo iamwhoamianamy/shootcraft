@@ -11,12 +11,12 @@ namespace shootcraft.src
 {
    static class TexturesHandler
    {
-      public static Dictionary<Type, int> blockTextures;
+      public static Dictionary<string, int> blockTextures;
       private static string blocksPath = "../../resources/textures/";
 
       static TexturesHandler()
       {
-         blockTextures = new Dictionary<Type, int>();
+         blockTextures = new Dictionary<string, int>();
 
          foreach (var block in ClassesHandler.Blocks)
          {
@@ -34,7 +34,7 @@ namespace shootcraft.src
 
             GL.GenTextures(1, out int textureID);
             GL.BindTexture(TextureTarget.Texture2D, textureID);
-            blockTextures[block] = textureID;
+            blockTextures[block.Name] = textureID;
 
             BitmapData data = texture.LockBits(new System.Drawing.Rectangle(0, 0, texture.Width, texture.Height),
             ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);

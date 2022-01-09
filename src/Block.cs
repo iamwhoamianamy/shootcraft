@@ -15,7 +15,7 @@ using shootcraft.src.blocks;
 namespace shootcraft.src
 {
    [JsonObject(MemberSerialization.OptIn)]
-   public class Block : IBlockRegisterable
+   public class Block : IBlockRegisterable, IStorable
    {
       public Vector2 pos;
       public const int maxLightLevel = 8;
@@ -63,7 +63,7 @@ namespace shootcraft.src
          Rectangle rect = GetRectangle();
 
          GL.BindTexture(TextureTarget.Texture2D,
-            TexturesHandler.blockTextures[GetType()]);
+            TexturesHandler.blockTextures[GetType().Name]);
 
          rect.DrawTexture();
 

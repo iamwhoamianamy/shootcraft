@@ -24,6 +24,9 @@ namespace shootcraft.src
       public float Top => leftTop.Y;
       public float Bot => leftBot.Y;
 
+      public float Width => Math.Abs(Right - Left);
+      public float Height => Math.Abs(Top - Bot);
+
       public Rectangle(Vector2 leftTop, Vector2 rightTop, Vector2 rightBot, Vector2 leftBot)
       {
          this.leftTop = leftTop;
@@ -123,6 +126,21 @@ namespace shootcraft.src
          GL.End();
          GL.DepthMask(true);
          GL.Disable(EnableCap.Blend);
+      }
+
+      public void DrawOutline(Color4 color, float lineWidth)
+      {
+         GL.Color4(color);
+         GL.LineWidth(lineWidth);
+
+         GL.Begin(PrimitiveType.LineLoop);
+         {
+            GL.Vertex2(leftTop);
+            GL.Vertex2(rightTop);
+            GL.Vertex2(rightBot);
+            GL.Vertex2(leftBot);
+         }
+         GL.End();
       }
    }
 }

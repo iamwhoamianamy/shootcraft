@@ -27,39 +27,63 @@ namespace shootcraft
 {
    public partial class MainWindow : Window
    {
-
       private bool isMouseOver = false;
       private bool isMouseDown = false;
 
       private void glControl_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         float x = e.X;
-         x /= globalScaling;
+         int x = e.X;
+         int y = glControl.Height - e.Y;
 
-         x -= screenCenterGame.X;
-         x /= scale;
-         x += screenCenterGame.X;
+         CalcPlayersCursorPosition(x, y);
+         CalcInventoryActiveCellId(x, y);
+      }
 
-         x -= translation.X;
-         player.cursor.pos.X = x;
+      private void CalcInventoryActiveCellId(int x, int y)
+      {
+         player.MyInventory.ActiveCell = Inventory.CellIdByPos(x, y);
+      }
 
-         float y = glControl.Height - e.Y;
-         y /= globalScaling;
+      private void CalcPlayersCursorPosition(int x, int y)
+      {
+         float newX = x;
+         newX /= globalScaling;
 
-         y -= screenCenterGame.Y;
-         y /= scale;
-         y += screenCenterGame.Y;
+         newX -= screenCenterGame.X;
+         newX /= scale;
+         newX += screenCenterGame.X;
 
-         y -= translation.Y;
-         player.cursor.pos.Y = y;
+         newX -= translation.X;
+         player.cursor.pos.X = newX;
+
+         float newY = y;
+         newY /= globalScaling;
+
+         newY -= screenCenterGame.Y;
+         newY /= scale;
+         newY += screenCenterGame.Y;
+
+         newY -= translation.Y;
+         player.cursor.pos.Y = newY;
       }
 
       private void glControl_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
       {
-         //Vector2 block_pos = player.cursor.pos;
+         if(player.IsEnventoryOpened)
+         {
+            MouseClickInventoryOpened(e);
+         }   
+         else
+         {
+            MouseClickInventoryClosed(e);
+         }
+      }
+
+      private void MouseClickInventoryClosed(System.Windows.Forms.MouseEventArgs e)
+      {
          Block block = player.GetBlockUnderCursor();
 
-         if(!(block is null))
+         if (!(block is null))
          {
             switch (e.Button)
             {
@@ -71,15 +95,20 @@ namespace shootcraft
                }
                case System.Windows.Forms.MouseButtons.Right:
                {
-                  World.SetBlockAndUpdateLight(new StoneBlock(block.pos));
-
+                  player.ApplyHoldingItem();
                   break;
                }
             }
          }
       }
 
-      
+      private void MouseClickInventoryOpened(System.Windows.Forms.MouseEventArgs e)
+      {
+         if(player.MyInventory.ActiveCell is not null)
+         {
+            player.HoldingItem = player.MyInventory.Cells[player.MyInventory.ActiveCell.Value].Item;
+         }
+      }
 
       private void glControl_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
       {
@@ -127,29 +156,14 @@ namespace shootcraft
       private void glControl_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
       {
 
-         //switch(e.KeyCode)
-         //{
-         //   case System.Windows.Forms.Keys.W:
-         //   {
-         //      player.GoUp();
-         //      break;
-         //   }
-         //   case System.Windows.Forms.Keys.A:
-         //   {
-         //      player.GoLeft();
-         //      break;
-         //   }
-         //   case System.Windows.Forms.Keys.S:
-         //   {
-         //      player.GoDown();
-         //      break;
-         //   }
-         //   case System.Windows.Forms.Keys.D:
-         //   {
-         //      player.GoRight();
-         //      break;
-         //   }
-         //}
+         switch (e.KeyCode)
+         {
+            case System.Windows.Forms.Keys.E:
+            {
+               player.IsEnventoryOpened = !player.IsEnventoryOpened;
+               break;
+            }
+         }
       }
 
       public Vector2 ScreenToWorld(Vector2 coords)
