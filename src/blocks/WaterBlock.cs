@@ -83,10 +83,7 @@ namespace shootcraft.src.blocks
 
          if (upperBlock is not null && upperBlock is WaterBlock uwb)
          {
-            if (saturation < uwb.saturation)
-            {
-               saturation = uwb.saturation;
-            }
+            saturation = WaterBlock.maxSaturation;
          }
       }
 
