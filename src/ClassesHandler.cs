@@ -29,6 +29,5 @@ namespace shootcraft.src
       }
 
       public static void Init() { }
-
    }
 }

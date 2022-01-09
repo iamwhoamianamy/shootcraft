@@ -22,12 +22,13 @@ namespace shootcraft.src
       {
          Cells = new List<InventoryCell>();
 
-         for (int i = 0; i < ClassesHandler.Blocks.Count; i++)
+         for (int i = 1; i < ClassesHandler.Blocks.Count; i++)
          {
-            Cells.Add(new InventoryCell(new Item((Block)Activator.CreateInstance(ClassesHandler.Blocks[i])), 1, i));
+            Block block = (Block)Activator.CreateInstance(ClassesHandler.Blocks[i]);
+            Cells.Add(new InventoryCell(new Item(block), 1, i - 1));
          }
 
-         for (int i = ClassesHandler.Blocks.Count; i < cellCountX * cellCountY; i++)
+         for (int i = ClassesHandler.Blocks.Count - 1; i < cellCountX * cellCountY; i++)
          {
             Cells.Add(new InventoryCell(new Item(), 1, i));
          }
@@ -43,8 +44,7 @@ namespace shootcraft.src
          if(ActiveCell is not null)
          {
             var rectangle = Cells[ActiveCell.Value].DrawingRectangle;
-            rectangle.DrawOutline(Color4.Red, 3);
-
+            rectangle.DrawOutline(new Color4(200, 42, 42, 255), 3);
          }
       }
 

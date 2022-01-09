@@ -142,5 +142,15 @@ namespace shootcraft.src
          }
          GL.End();
       }
+
+      public void Scale(float factor)
+      {
+         for (int i = 0; i < 4; i++)
+         {
+            this[i] -= center;
+            this[i] *= factor;
+            this[i] += center;
+         }
+      }
    }
 }

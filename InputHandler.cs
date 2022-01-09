@@ -107,6 +107,9 @@ namespace shootcraft
          if(player.MyInventory.ActiveCell is not null)
          {
             player.HoldingItem = player.MyInventory.Cells[player.MyInventory.ActiveCell.Value].Item;
+
+            if (player.HoldingItem.Storage is not null)
+               player.IsEnventoryOpened = false;
          }
       }
 
@@ -175,8 +178,5 @@ namespace shootcraft
       {
 
       }
-
-
-
    }
 }

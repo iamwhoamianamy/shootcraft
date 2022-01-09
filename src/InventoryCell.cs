@@ -46,14 +46,13 @@ namespace shootcraft.src
          Rectangle rect = DrawingRectangle;
 
          DrawBackground(rect);
-         rect.DrawOutline(Color4.Black, 3);
          Item.Draw(rect);
-
+         rect.DrawOutline(Color4.Black, 3);
       }
 
       private void DrawBackground(Rectangle rect)
       {
-         GL.Color4(Color4.Gray);
+         GL.Color4(new Color4(100, 42, 42, 255));
 
          GL.Begin(PrimitiveType.Quads);
          {

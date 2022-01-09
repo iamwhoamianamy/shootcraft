@@ -34,6 +34,7 @@ namespace shootcraft.src
          GenerateBasicTerrain();
          SpawnSand();
          SpawnGrass();
+         UpdateLighting();
       }
 
       public void InitChunk(int index)
@@ -251,8 +252,8 @@ namespace shootcraft.src
 
                   if(block is not null)
                   {
-                     int dist = (int)Vector2.Distance(source.pos, block.pos);
-                     int lightLevel = Block.maxLightLevel - dist + 1;
+                     int dist = (int)Math.Round(Vector2.Distance(source.pos, block.pos));
+                     int lightLevel = Block.maxLightLevel - dist;
 
                      if (block.LightLevel < lightLevel)
                         block.LightLevel = lightLevel;
@@ -261,7 +262,6 @@ namespace shootcraft.src
             }
          }
       }
-
 
       private List<Block> GetSunLightSources()
       {

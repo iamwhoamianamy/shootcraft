@@ -47,6 +47,7 @@ namespace shootcraft.src
       {
          Rectangle rect = GetRectangle();
 
+         GL.LineWidth(2);
          GL.Begin(PrimitiveType.LineLoop);
 
          for (int i = 0; i < 4; i++)
