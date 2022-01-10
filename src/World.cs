@@ -122,7 +122,14 @@ namespace shootcraft.src
             Chunk chunk = new Chunk(chunkId);
             chunks.Add(chunkId, chunk);
 
-            if (perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0)
+
+            if (perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0
+               && perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] == perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f) + 7])
+            {
+               House.Insert(StructureHandler.houses[RNG.Next(0, 2)], new Vector2(chunk.StartX + 4.0f, perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
+            }
+            else if (perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] > 16 && perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] % 2 == 0 
+               && perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)] == perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f) + 1])
             {
                Tree.Insert(StructureHandler.trees[RNG.Next(0, 4)], new Vector2(chunk.StartX + 4.0f, perlinNoise.values[perlinNoise.Length / 2 + (int)Math.Floor(chunk.StartX + 4.0f)]));
             }

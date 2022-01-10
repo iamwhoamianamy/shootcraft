@@ -20,10 +20,10 @@ namespace shootcraft.src
       public static List<List<string>> treeTokens = new List<List<string>>();
       public static List<Tree> trees = new List<Tree>();
 
-      //public static Dictionary<int, Type> houseBlocks = new Dictionary<int, Type>();
-      //public static List<string> houseNamse = new List<string>();
-      //public static List<List<string>> houseTokens = new List<List<string>>();
-      //public static List<Houses> houses = new List<Houses>();
+      public static Dictionary<int, Type> houseBlocks = new Dictionary<int, Type>();
+      public static List<string> houseNames = new List<string>();
+      public static List<List<string>> houseTokens = new List<List<string>>();
+      public static List<House> houses = new List<House>();
 
 
       static StructureHandler()
@@ -32,12 +32,13 @@ namespace shootcraft.src
          InitNames();
          InitTokens();
          TreesFromTokens(treeTokens);
+         HousesFromTokens(houseTokens);
       }
 
       public static void InitBlocks()
       {
          InitTreeBlocks();
-         //InitHouseBlocks();
+         InitHouseBlocks();
       }
 
       public static void InitTreeBlocks()
@@ -46,16 +47,17 @@ namespace shootcraft.src
          treeBlocks[2] = typeof(LeavesBlock);
       }
 
-      //public static void InitHouseBlocks()
-      //{
-      //   houseBlocks[1] = typeof(WoodBlock);
-      //   houseBlocks[2] = typeof(PlanksBlock);
-      //}
+      public static void InitHouseBlocks()
+      {
+         houseBlocks[1] = typeof(WoodBlock);
+         houseBlocks[2] = typeof(PlanksBlock);
+         houseBlocks[3] = typeof(StoneBlock);
+      }
 
       public static void InitNames()
       {
          NamesFromFile(treeNames, path + "Tree.txt");
-         //FromFile(treesName, path + "House.txt");
+         NamesFromFile(houseNames, path + "House.txt");
       }
 
       public static List<string> NamesFromFile(List<string> list, string path)
@@ -72,7 +74,7 @@ namespace shootcraft.src
       public static void InitTokens()
       {
          TokensFromFile(treeTokens, treeNames);
-         //TokensFromFile(houseTokens, houseNames);
+         TokensFromFile(houseTokens, houseNames);
       }
 
       public static List<List<string>> TokensFromFile(List<List<string>> tokens, List<string> names)
@@ -115,6 +117,32 @@ namespace shootcraft.src
             trees.Add(tree);
          }
          return trees;
+      }
+
+      public static List<House> HousesFromTokens(List<List<string>> tokens)
+      {
+         for (int i = 0; i < houseNames.Count(); i++)
+         {
+            House house = new House(tokens[i][0].Length, tokens[i].Count());
+
+            for (int j = 0; j < tokens[i][0].Length; j++) //x
+            {
+               for (int l = 0; l < tokens[i].Count(); l++) //y
+               {
+                  int token = int.Parse(tokens[i][tokens[i].Count - 1 - l][j].ToString());
+
+                  if (token != 0)
+                  {
+                     Type type = houseBlocks[token];
+                     Vector2 pos = new Vector2(j + 0.5f, l + 0.5f);
+                     house.blocks[l][j] = (Block)Activator.CreateInstance(type, pos);
+                  }
+               }
+            }
+
+            houses.Add(house);
+         }
+         return houses;
       }
 
    }

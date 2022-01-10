@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="src\Block.cs" />
     <Compile Include="src\blocks\GrassBlock.cs" />
+    <Compile Include="src\blocks\PlanksBlock.cs" />
     <Compile Include="src\IStorable.cs" />
     <Compile Include="src\blocks\LeavesBlock.cs" />
     <Compile Include="src\blocks\SandBlock.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="src\RasterMaster.cs" />
     <Compile Include="src\Structure.cs" />
     <Compile Include="src\StructureHandler.cs" />
+    <Compile Include="src\structures\House.cs" />
     <Compile Include="src\structures\Tree.cs" />
     <Compile Include="src\SavesHandler.cs" />
     <Compile Include="src\TexturesHandler.cs" />
