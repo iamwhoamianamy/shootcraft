@@ -9,7 +9,7 @@
         Title="MainWindow" Height="600" Width="1200"
         Closed="Window_Closed">
     <Grid>
-        <WindowsFormsHost Initialized="WindowsFormsHost_Initialized">
+        <WindowsFormsHost Initialized="WindowsFormsHost_Initialized" Margin="0,20,0,0">
             <opentk:GLControl x:Name="glControl"
                               Load="glControl_Load"
                               Paint="glControl_Paint"
@@ -20,5 +20,15 @@
                               KeyPress="glControl_KeyPress"
                               MouseWheel="glControl_MouseWheel"/>
         </WindowsFormsHost>
+        <Menu HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+            <MenuItem Header="World">
+                <MenuItem Header="Save world" Click="MenuItem_SaveWorld_Click"></MenuItem>
+                <MenuItem Header="Save world as ..." Click="MenuItem_SaveWorldAs_Click"></MenuItem>
+                <Separator/>
+                <MenuItem Header="Load world ..." Click="MenuItem_LoadWorldAs_Click"></MenuItem>
+                <Separator/>
+                <MenuItem Header="Generate new world//use with care, may cause exception" Click="MenuItem_GenerateWorldAs_Click"></MenuItem>
+            </MenuItem>
+        </Menu>
     </Grid>
 </Window>
