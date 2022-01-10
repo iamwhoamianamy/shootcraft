@@ -51,6 +51,7 @@ namespace shootcraft
          ((MainWindow)Application.Current.MainWindow).SetPlayer(SavesHandler.RestorePlayerFromJson(SavesHandler.worldName));
          SavesHandler.CompressJsons(SavesHandler.worldName);
          ((MainWindow)Application.Current.MainWindow).RestartTimers();
+         World.UpdateLighting();
          Close();
       }
 

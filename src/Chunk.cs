@@ -34,7 +34,7 @@ namespace shootcraft.src
          GenerateBasicTerrain();
          SpawnSand();
          SpawnGrass();
-         UpdateLighting();
+         //UpdateLighting();
       }
 
       public void InitChunk(int index)

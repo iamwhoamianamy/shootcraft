@@ -26,8 +26,6 @@
                 <MenuItem Header="Save world as ..." Click="MenuItem_SaveWorldAs_Click"></MenuItem>
                 <Separator/>
                 <MenuItem Header="Load world ..." Click="MenuItem_LoadWorldAs_Click"></MenuItem>
-                <Separator/>
-                <MenuItem Header="Generate new world//use with care, may cause exception" Click="MenuItem_GenerateWorldAs_Click"></MenuItem>
             </MenuItem>
         </Menu>
     </Grid>

@@ -60,7 +60,6 @@ namespace shootcraft.src
 
       public virtual void Draw()
       {
-
          Rectangle rect = GetRectangle();
 
          GL.BindTexture(TextureTarget.Texture2D,
@@ -70,7 +69,6 @@ namespace shootcraft.src
 
          byte light = (byte)(255 / maxLightLevel * LightLevel);
          rect.DrawColor(new Color4(0, 0, 0, (byte)(255 - light)));
-         //GL.BlendFunc(BlendingFactor.);
       }
 
       public Rectangle GetRectangle()

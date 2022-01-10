@@ -10,6 +10,7 @@ using OpenTK.Graphics;
 using shootcraft.src.structures;
 
 using Newtonsoft.Json;
+using OpenTK.Graphics.OpenGL;
 
 namespace shootcraft.src
 {
@@ -150,6 +151,9 @@ namespace shootcraft.src
 
       public static void SetVisibleChunks(Vector2 pos, int fow)
       {
+         if (visibleChunks is null)
+            visibleChunks = new Dictionary<int, Chunk>();
+
          int center_chunk_id = PosToChunkId(pos);
          var newVisibleChunks = new Dictionary<int, Chunk>();
 
@@ -167,10 +171,17 @@ namespace shootcraft.src
 
       public static void DrawVisibleChunks()
       {
+         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+         GL.Enable(EnableCap.Blend);
+         GL.DepthMask(false);
+
          foreach (var chunk in visibleChunks.Values)
          {
             chunk.DrawAllBlocks();
          }
+
+         GL.DepthMask(true);
+         GL.Disable(EnableCap.Blend);
       }
 
       public static void UpdateVisibleChunks()

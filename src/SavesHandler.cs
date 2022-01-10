@@ -60,10 +60,10 @@ namespace shootcraft.src
          File.WriteAllText("../../resources/LastPlayed.txt", worldName);
       }
 
-      static public void SetWorldNameToLastPlayed()
-      {
-         worldName = File.ReadAllText("../../resources/LastPlayed.txt");
-      }
+      //static public void SetWorldNameToLastPlayed()
+      //{
+      //   worldName = File.ReadAllText("../../resources/LastPlayed.txt");
+      //}
 
    }
 }

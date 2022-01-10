@@ -82,10 +82,9 @@ namespace shootcraft
 
          scale = 1.0f;
 
-         if (File.Exists(SavesHandler.path + SavesHandler.worldName + ".zip"))
-         //if(false)
+         //if (File.Exists(SavesHandler.path + SavesHandler.worldName + ".zip"))
+         if(false)
          {
-            SavesHandler.SetWorldNameToLastPlayed();
             SavesHandler.DecompressJsons(SavesHandler.worldName);
             World.RestoreFromJson(SavesHandler.worldName);
             player = SavesHandler.RestorePlayerFromJson(SavesHandler.worldName);
@@ -95,9 +94,10 @@ namespace shootcraft
          {
             World.Init();
             player = new Player(new Vector2(0, 40.0f));
-            World.SetVisibleChunks(player.pos, player.fow);
-            World.UpdateLighting();
          }
+
+         World.SetVisibleChunks(player.pos, player.fow);
+         World.UpdateLighting();
 
          worldUpdatingTimer = new Timer(1.0 / ticksToUpdate * 1000);
          worldUpdatingTimer.Elapsed += WorldUpdatingTimer_Elapsed;

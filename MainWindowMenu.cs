@@ -65,8 +65,8 @@ namespace shootcraft
          SavesHandler.CompressJsons(SavesHandler.worldName);
 
          World.Init();
-         player = new Player(new Vector2(0, 40.0f));
          World.SetVisibleChunks(player.pos, player.fow);
+         player = new Player(new Vector2(0, 40.0f));
          World.UpdateLighting();
       }
 

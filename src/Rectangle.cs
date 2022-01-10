@@ -112,18 +112,25 @@ namespace shootcraft.src
 
       public void DrawColor(Color4 color)
       {
+         GL.Color4(color);
+         GL.Begin(PrimitiveType.Quads);
+         {
+            GL.Vertex2(rightTop.X, rightTop.Y);
+            GL.Vertex2(leftTop.X, leftTop.Y);
+            GL.Vertex2(leftBot.X, leftBot.Y);
+            GL.Vertex2(rightBot.X, rightBot.Y);
+         }
+         GL.End();
+      }
+
+      public void DrawColorWithBlending(Color4 color)
+      {
          GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
          GL.Enable(EnableCap.Blend);
          GL.DepthMask(false);
-         GL.Begin(PrimitiveType.Quads);
 
-         GL.Color4(color);
-         GL.Vertex2(rightTop.X, rightTop.Y);
-         GL.Vertex2(leftTop.X, leftTop.Y);
-         GL.Vertex2(leftBot.X, leftBot.Y);
-         GL.Vertex2(rightBot.X, rightBot.Y);
+         DrawColor(color);
 
-         GL.End();
          GL.DepthMask(true);
          GL.Disable(EnableCap.Blend);
       }
